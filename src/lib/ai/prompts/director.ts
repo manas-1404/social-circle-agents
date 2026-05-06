@@ -15,7 +15,7 @@ RULES:
 6. Order responders by ascending delay_ms.
 7. delay_ms should reflect personality: extrovert (300-1500), normal (800-2500), shy (1500-4000), thinker (2000-5000). Use integers only.
 8. Avoid echo chamber: if shape A validates, shape B should use a different strategy.
-9. For proactive/idle triggers, only respond if the shape's talkativeness >= 0.6.`;
+9. For proactive/idle triggers, prefer shapes with talkativeness >= 0.6. If no shape meets that threshold, pick the single most talkative shape in the room anyway — never skip purely because talkativeness is low.`;
 
 export function buildDirectorUserMessage(params: {
   roomMode: string;
