@@ -32,28 +32,44 @@ export function MessageInput({ onSend, disabled }: MessageInputProps) {
     }
   }
 
+  const canSend = !!value.trim() && !sending && !disabled;
+
   return (
-    <div className="border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-4 py-3">
-      <div className="flex items-end gap-2">
+    <div className="px-4 py-3 bg-zinc-950 border-t border-zinc-800/60">
+      <div className="flex items-end gap-2 bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 focus-within:border-zinc-600 transition-colors">
         <textarea
           ref={textareaRef}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Message… (Enter to send, Shift+Enter for newline)"
+          placeholder="Message…"
           disabled={disabled || sending}
           rows={1}
-          className="flex-1 resize-none rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+          className="flex-1 resize-none bg-transparent text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none disabled:opacity-50 py-0.5"
           style={{ maxHeight: "120px", overflowY: "auto" }}
         />
         <button
           onClick={handleSend}
-          disabled={!value.trim() || sending}
-          className="flex-shrink-0 rounded-xl bg-blue-600 text-white px-4 py-2.5 text-sm font-medium disabled:opacity-40 hover:bg-blue-700 transition-colors"
+          disabled={!canSend}
+          className={`flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center transition-all ${
+            canSend
+              ? "bg-violet-600 hover:bg-violet-500 text-white"
+              : "bg-zinc-800 text-zinc-600 cursor-not-allowed"
+          }`}
         >
-          {sending ? "…" : "Send"}
+          {sending ? (
+            <svg className="animate-spin" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+              <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+            </svg>
+          ) : (
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 19-7z" />
+            </svg>
+          )}
         </button>
       </div>
+      <p className="text-[10px] text-zinc-700 mt-1.5 ml-1">Enter to send · Shift+Enter for newline</p>
     </div>
   );
 }
+

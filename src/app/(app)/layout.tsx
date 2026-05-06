@@ -9,7 +9,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/sign-in");
 
-  const initials = (session.user.name ?? session.user.email)
+  const displayName = session.user.name ?? session.user.email;
+  const initials = displayName
     .split(" ")
     .map((w: string) => w[0])
     .join("")
@@ -17,24 +18,18 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     .toUpperCase();
 
   return (
-    <div className="flex flex-col h-screen">
-      <header className="flex items-center justify-between px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 flex-shrink-0">
-        <Link href="/rooms" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-            </svg>
-          </div>
-          <span className="font-bold text-xl tracking-tight">Social Circle</span>
+    <div className="flex flex-col h-screen bg-zinc-950">
+      <header className="flex items-center justify-between px-5 py-3 border-b border-zinc-800/60 flex-shrink-0">
+        <Link href="/rooms" className="flex items-center gap-2">
+          <span className="text-violet-400 font-black text-lg tracking-tighter">✦</span>
+          <span className="font-semibold text-base text-zinc-100 tracking-tight">orbit</span>
         </Link>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-zinc-200 dark:bg-zinc-700 flex items-center justify-center text-xs font-bold text-zinc-700 dark:text-zinc-200">
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 bg-zinc-900 rounded-full pl-1 pr-3 py-1">
+            <div className="w-6 h-6 rounded-full bg-violet-700 flex items-center justify-center text-[10px] font-bold text-violet-100">
               {initials}
             </div>
-            <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300 hidden sm:block">
-              {session.user.name ?? session.user.email}
-            </span>
+            <span className="text-xs text-zinc-400 hidden sm:block">{displayName}</span>
           </div>
           <SignOutButton />
         </div>

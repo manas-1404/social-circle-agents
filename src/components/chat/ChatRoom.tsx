@@ -101,12 +101,12 @@ export function ChatRoom({
   }, [messages, roomId]);
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full bg-zinc-950">
       <div className="flex flex-1 flex-col overflow-hidden">
-        <div className="border-b border-zinc-200 dark:border-zinc-800 px-4 py-3 flex items-center gap-3">
+        <div className="border-b border-zinc-800/60 px-4 py-2.5 flex items-center gap-3 bg-zinc-950">
           <div className="flex flex-col flex-1">
-            <h1 className="font-semibold text-zinc-900 dark:text-zinc-100">{roomName}</h1>
-            <span className="text-xs text-zinc-500">
+            <h1 className="text-sm font-semibold text-zinc-100">{roomName}</h1>
+            <span className="text-[11px] text-zinc-600">
               {shapes.length} shape{shapes.length !== 1 ? "s" : ""} · {humans.length} human{humans.length !== 1 ? "s" : ""}
             </span>
           </div>
@@ -123,7 +123,7 @@ export function ChatRoom({
         <MessageInput onSend={handleSend} />
       </div>
 
-      <div className="hidden md:block w-56 border-l border-zinc-200 dark:border-zinc-800 overflow-y-auto">
+      <div className="hidden md:block w-52 border-l border-zinc-800/60 overflow-y-auto bg-zinc-950">
         <PresenceList roomId={roomId} shapes={shapes} humans={humans} currentUserId={currentUserId} />
       </div>
     </div>
