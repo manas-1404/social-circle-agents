@@ -105,10 +105,14 @@ export const onMessageSent = inngest.createFunction(
       return { skipped: true, reason: directorOutput.skip_reason };
     }
 
+    const shapeNameMap = Object.fromEntries(
+      shapesInRoom.map(({ shape }) => [shape.id, shape.persona_kernel.identity.display_name])
+    );
+
     const chatHistoryStr = recentMessages
       .map((m) => {
         const sender = m.sender_shape_id
-          ? `shape_${m.sender_shape_id.slice(0, 6)}`
+          ? (shapeNameMap[m.sender_shape_id] ?? `shape_${m.sender_shape_id.slice(0, 6)}`)
           : `user_${m.sender_user_id?.slice(0, 6)}`;
         return `[${new Date(m.created_at ?? Date.now()).toISOString().slice(11, 19)}] @${sender}: ${m.content}`;
       })

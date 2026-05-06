@@ -86,8 +86,17 @@ export const onTimeElapsed = inngest.createFunction(
 
     if (!directorOutput.responders?.length) return { skipped: true, reason: directorOutput.skip_reason };
 
+    const shapeNameMap = Object.fromEntries(
+      shapesInRoom.map(({ shape }) => [shape.id, shape.persona_kernel.identity.display_name])
+    );
+
     const chatHistoryStr = recentMessages
-      .map((m) => `@${m.sender_shape_id ? "shape" : "user"}: ${m.content}`)
+      .map((m) => {
+        const sender = m.sender_shape_id
+          ? (shapeNameMap[m.sender_shape_id] ?? `shape_${m.sender_shape_id.slice(0, 6)}`)
+          : `user_${m.sender_user_id?.slice(0, 6)}`;
+        return `@${sender}: ${m.content}`;
+      })
       .join("\n");
 
     for (const responder of directorOutput.responders) {
