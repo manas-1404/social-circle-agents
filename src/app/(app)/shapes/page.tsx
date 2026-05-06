@@ -14,6 +14,12 @@ export default async function ShapesPage() {
 
   return (
     <div className="max-w-xl mx-auto px-5 py-8">
+      <div className="mb-5 p-4 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-zinc-500 leading-relaxed">
+        <p className="text-zinc-400 font-medium mb-1">What are Shapes?</p>
+        Shapes are AI personas that live in your chat rooms. Each one has its own personality, backstory, and memory. Add them to a room and they&apos;ll respond on their own — you don&apos;t control what they say.
+        <span className="block mt-1 text-zinc-600">Shapes you create are private to you. You can add them to any of your rooms.</span>
+      </div>
+
       <div className="flex items-center justify-between mb-5">
         <div>
           <h1 className="text-lg font-semibold text-zinc-100">Shapes</h1>
