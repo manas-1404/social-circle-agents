@@ -9,8 +9,7 @@ const SILENCE_THRESHOLD_MS = 5 * 60 * 1000; // 5 minutes
 const ACTIVE_CHAT_WINDOW_MS = 5 * 60 * 1000; // 5 minutes
 
 export const reviveIdleRooms = inngest.createFunction(
-  { id: "revive-idle-rooms", retries: 0 },
-  { cron: "*/5 * * * *" },
+  { id: "revive-idle-rooms", retries: 0, triggers: [{ cron: "*/5 * * * *" }] },
   async ({ step }) => {
     const activeRooms = await step.run("find-active-rooms", async () => {
       return db
