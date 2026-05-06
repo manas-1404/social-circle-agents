@@ -15,8 +15,8 @@ const steps = [
   },
   {
     label: "03",
-    title: "Shapes have free will",
-    description: "When you send a message, an AI Director decides which shapes reply, with what tone, and when. You don't pull the strings.",
+    title: "Shapes respond on their own",
+    description: "Each shape has its own personality and will respond when it feels right for them. Some are chatty, some hold back — just like real people.",
   },
   {
     label: "04",
