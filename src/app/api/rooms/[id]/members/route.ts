@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { room_members, rooms } from "@/lib/db/schema";
+import { room_members, rooms, shapes, users } from "@/lib/db/schema";
 import { auth } from "@/lib/auth";
 import { eq, and } from "drizzle-orm";
 import { headers } from "next/headers";
+import { triggerRoomEvent } from "@/lib/pusher/server";
 
 export async function POST(
   req: NextRequest,
@@ -34,6 +35,28 @@ export async function POST(
     .insert(room_members)
     .values({ room_id: roomId, user_id, shape_id, role: "member" })
     .returning();
+
+  // Broadcast to all room members so their UI updates live
+  if (shape_id) {
+    const shape = await db.query.shapes.findFirst({ where: eq(shapes.id, shape_id) });
+    if (shape) {
+      await triggerRoomEvent(roomId, "member.joined", {
+        type: "shape",
+        id: shape.id,
+        display_name: shape.persona_kernel.identity.display_name,
+        avatar_url: shape.avatar_url,
+      });
+    }
+  } else if (user_id) {
+    const user = await db.query.users.findFirst({ where: eq(users.id, user_id) });
+    if (user) {
+      await triggerRoomEvent(roomId, "member.joined", {
+        type: "user",
+        id: user.id,
+        display_name: user.name,
+      });
+    }
+  }
 
   return NextResponse.json(member, { status: 201 });
 }

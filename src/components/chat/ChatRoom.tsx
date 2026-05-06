@@ -9,13 +9,17 @@ import { subscribeToRoom } from "@/lib/pusher/client";
 import type { Message } from "@/lib/db/schema";
 import type { TypingShape } from "./TypingIndicator";
 
+type ShapeMember = { id: string; display_name: string; avatar_url?: string | null };
+type HumanMember = { id: string; display_name: string };
+
 type ChatRoomProps = {
   roomId: string;
   roomName: string;
   inviteCode?: string | null;
   initialMessages: (Message & { sender_display_name?: string; sender_avatar?: string | null })[];
   currentUserId: string;
-  shapes: { id: string; display_name: string; avatar_url?: string | null }[];
+  shapes: ShapeMember[];
+  humans: HumanMember[];
 };
 
 export function ChatRoom({
@@ -24,10 +28,13 @@ export function ChatRoom({
   inviteCode,
   initialMessages,
   currentUserId,
-  shapes,
+  shapes: initialShapes,
+  humans: initialHumans,
 }: ChatRoomProps) {
   const [messages, setMessages] = useState(initialMessages);
   const [typers, setTypers] = useState<TypingShape[]>([]);
+  const [shapes, setShapes] = useState<ShapeMember[]>(initialShapes);
+  const [humans, setHumans] = useState<HumanMember[]>(initialHumans);
 
   useEffect(() => {
     const unsub = subscribeToRoom(roomId, {
@@ -37,7 +44,6 @@ export function ChatRoom({
           if (prev.some((m) => m.id === msg.id)) return prev;
           return [...prev, msg];
         });
-        // Remove from typers if shape just sent
         if (msg.sender_shape_id) {
           setTypers((prev) => prev.filter((t) => t.shapeId !== msg.sender_shape_id));
         }
@@ -52,6 +58,20 @@ export function ChatRoom({
       onTypingStop: (data) => {
         const { shape_id } = data as { shape_id: string };
         setTypers((prev) => prev.filter((t) => t.shapeId !== shape_id));
+      },
+      onMemberJoined: (data) => {
+        const member = data as { type: "shape" | "user"; id: string; display_name: string; avatar_url?: string | null };
+        if (member.type === "shape") {
+          setShapes((prev) => {
+            if (prev.some((s) => s.id === member.id)) return prev;
+            return [...prev, { id: member.id, display_name: member.display_name, avatar_url: member.avatar_url }];
+          });
+        } else {
+          setHumans((prev) => {
+            if (prev.some((h) => h.id === member.id)) return prev;
+            return [...prev, { id: member.id, display_name: member.display_name }];
+          });
+        }
       },
     });
     return unsub;
@@ -86,20 +106,17 @@ export function ChatRoom({
 
   return (
     <div className="flex h-full">
-      {/* Chat area */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Header */}
         <div className="border-b border-zinc-200 dark:border-zinc-800 px-4 py-3 flex items-center gap-3">
-          <div className="flex flex-col">
+          <div className="flex flex-col flex-1">
             <h1 className="font-semibold text-zinc-900 dark:text-zinc-100">{roomName}</h1>
             <span className="text-xs text-zinc-500">
-              {shapes.length} shape{shapes.length !== 1 ? "s" : ""} active
+              {shapes.length} shape{shapes.length !== 1 ? "s" : ""} · {humans.length} human{humans.length !== 1 ? "s" : ""}
             </span>
           </div>
           {inviteCode && <InviteButton inviteCode={inviteCode} />}
         </div>
 
-        {/* Messages */}
         <MessageList
           messages={messages}
           currentUserId={currentUserId}
@@ -107,13 +124,11 @@ export function ChatRoom({
           onLoadMore={messages.length >= 50 ? handleLoadMore : undefined}
         />
 
-        {/* Input */}
         <MessageInput onSend={handleSend} onSleep={handleSleep} />
       </div>
 
-      {/* Sidebar */}
       <div className="hidden md:block w-56 border-l border-zinc-200 dark:border-zinc-800 overflow-y-auto">
-        <PresenceList roomId={roomId} shapes={shapes} />
+        <PresenceList roomId={roomId} shapes={shapes} humans={humans} currentUserId={currentUserId} />
       </div>
     </div>
   );

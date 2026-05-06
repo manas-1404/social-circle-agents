@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { shapes } from "@/lib/db/schema";
 import { auth } from "@/lib/auth";
-import { eq, or } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import Link from "next/link";
 
@@ -10,12 +10,7 @@ export default async function ShapesPage() {
   const publicShapes = await db
     .select()
     .from(shapes)
-    .where(
-      or(
-        eq(shapes.is_public, true),
-        session ? eq(shapes.creator_id, session.user.id) : undefined
-      )
-    );
+    .where(eq(shapes.creator_id, session!.user.id));
 
   return (
     <div className="max-w-2xl mx-auto px-6 py-10">

@@ -4,8 +4,8 @@ import { headers } from "next/headers";
 import { redirect, notFound } from "next/navigation";
 import { ChatRoom } from "@/components/chat/ChatRoom";
 import { db } from "@/lib/db";
-import { room_members } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
+import { room_members, users } from "@/lib/db/schema";
+import { eq, and, inArray } from "drizzle-orm";
 
 export default async function ChatRoomPage({
   params,
@@ -34,6 +34,16 @@ export default async function ChatRoomPage({
     avatar_url: shape.avatar_url,
   }));
 
+  const humanMemberIds = data.members
+    .filter((m) => m.user_id)
+    .map((m) => m.user_id as string);
+
+  const humanUsers = humanMemberIds.length > 0
+    ? await db.select({ id: users.id, name: users.name }).from(users).where(inArray(users.id, humanMemberIds))
+    : [];
+
+  const humans = humanUsers.map((u) => ({ id: u.id, display_name: u.name }));
+
   return (
     <ChatRoom
       roomId={roomId}
@@ -42,6 +52,7 @@ export default async function ChatRoomPage({
       initialMessages={initialMessages}
       currentUserId={session.user.id}
       shapes={shapes}
+      humans={humans}
     />
   );
 }

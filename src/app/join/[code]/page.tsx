@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { rooms, room_members } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import { headers } from "next/headers";
+import { triggerRoomEvent } from "@/lib/pusher/server";
 
 export default async function JoinPage({
   params,
@@ -42,6 +43,11 @@ export default async function JoinPage({
       room_id: room.id,
       user_id: session.user.id,
       role: "member",
+    });
+    await triggerRoomEvent(room.id, "member.joined", {
+      type: "user",
+      id: session.user.id,
+      display_name: session.user.name,
     });
   }
 

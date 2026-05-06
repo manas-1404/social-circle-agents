@@ -21,6 +21,7 @@ export async function pushLastMessage(roomId: string, senderId: string) {
   const key = `room:${roomId}:last_messages`;
   await redis.lpush(key, senderId);
   await redis.ltrim(key, 0, 9);
+  await redis.expire(key, 1800);
 }
 
 export async function getShapeMessageCount(shapeId: string, roomId: string): Promise<number> {
@@ -32,7 +33,7 @@ export async function getShapeMessageCount(shapeId: string, roomId: string): Pro
 export async function incrementShapeMessageCount(shapeId: string, roomId: string) {
   const key = `shape:${shapeId}:room:${roomId}:hour_count`;
   await redis.incr(key);
-  await redis.expire(key, 3600);
+  await redis.expire(key, 1800);
 }
 
 export async function getLastShapeSpokeAt(roomId: string): Promise<number | null> {
@@ -41,7 +42,7 @@ export async function getLastShapeSpokeAt(roomId: string): Promise<number | null
 }
 
 export async function setLastShapeSpokeAt(roomId: string) {
-  await redis.set(`room:${roomId}:last_shape_spoke_at`, Date.now(), { ex: 3600 });
+  await redis.set(`room:${roomId}:last_shape_spoke_at`, Date.now(), { ex: 1800 });
 }
 
 export async function getRoomTokensToday(roomId: string): Promise<number> {

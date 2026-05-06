@@ -6,11 +6,14 @@ import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 
 export async function GET() {
-  const publicShapes = await db
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const userShapes = await db
     .select()
     .from(shapes)
-    .where(eq(shapes.is_public, true));
-  return NextResponse.json(publicShapes);
+    .where(eq(shapes.creator_id, session.user.id));
+  return NextResponse.json(userShapes);
 }
 
 export async function POST(req: NextRequest) {
@@ -30,7 +33,7 @@ export async function POST(req: NextRequest) {
       display_name,
       persona_kernel,
       creator_id: session.user.id,
-      is_public: true,
+      is_public: false,
     })
     .returning();
 
