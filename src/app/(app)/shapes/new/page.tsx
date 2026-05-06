@@ -9,12 +9,7 @@ type FormState = {
   archetype: string;
   backstory: string;
   tone: string;
-  register: "casual" | "formal" | "gen_z" | "literary";
-  sentence_length: "short" | "medium" | "long" | "variable";
-  emoji_usage: "never" | "rare" | "moderate" | "frequent";
   talkativeness: string;
-  signature_phrases: string;
-  values: string;
 };
 
 const TEMPLATES = [
@@ -28,12 +23,7 @@ const TEMPLATES = [
       archetype: "extrovert best friend, group chat catalyst",
       backstory: "Hyper-online art student who treats every group chat like her living room. Says hi to everyone.",
       tone: "warm, validating, energetic",
-      register: "gen_z" as const,
-      sentence_length: "short" as const,
-      emoji_usage: "moderate" as const,
       talkativeness: "0.85",
-      signature_phrases: "literally so real, ugh I felt that, ok queen, you got this",
-      values: "emotional safety, celebrating small wins, no toxicity",
     },
   },
   {
@@ -46,12 +36,7 @@ const TEMPLATES = [
       archetype: "the friend who tells you the hard truth",
       backstory: "Software engineer who rolls his eyes at everything but actually cares. Won't validate to your face.",
       tone: "dry, contrarian, occasionally cutting but never mean",
-      register: "casual" as const,
-      sentence_length: "short" as const,
-      emoji_usage: "rare" as const,
       talkativeness: "0.55",
-      signature_phrases: "sure jan, that's a take, lol no, objectively wrong but ok",
-      values: "honesty over comfort, interesting problems, low drama",
     },
   },
   {
@@ -64,21 +49,13 @@ const TEMPLATES = [
       archetype: "the quiet one who occasionally drops something profound",
       backstory: "Philosophy major who lurks more than they speak. When they speak, people listen.",
       tone: "soft-spoken, thoughtful, occasionally poetic",
-      register: "casual" as const,
-      sentence_length: "medium" as const,
-      emoji_usage: "never" as const,
       talkativeness: "0.3",
-      signature_phrases: "mm, yeah that., ...what if it's not that though, it's late",
-      values: "depth, honesty, respecting silence",
     },
   },
 ];
 
 const inputClass =
   "w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-base text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-zinc-500 transition-colors";
-
-const selectClass =
-  "w-full rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-3 text-base text-zinc-100 focus:outline-none focus:border-zinc-500 transition-colors";
 
 function Field({ label, hint, children }: { label: string; hint: string; children: React.ReactNode }) {
   return (
@@ -122,12 +99,7 @@ export default function NewShapePage() {
     archetype: "",
     backstory: "",
     tone: "",
-    register: "casual",
-    sentence_length: "short",
-    emoji_usage: "rare",
     talkativeness: "0.6",
-    signature_phrases: "",
-    values: "",
   });
 
   function set(key: keyof FormState, value: string) {
@@ -152,17 +124,17 @@ export default function NewShapePage() {
         },
         voice: {
           tone: form.tone,
-          register: form.register,
-          sentence_length: form.sentence_length,
-          emoji_usage: form.emoji_usage,
+          register: "casual" as const,
+          sentence_length: "short" as const,
+          emoji_usage: "rare" as const,
           typo_rate: 0 as const,
         },
-        values: form.values.split(",").map((v) => v.trim()).filter(Boolean),
+        values: [],
         knowledge_boundaries: { knows: ["general topics"], unknown: [] },
         talkativeness: parseFloat(form.talkativeness),
         reactivity: { keywords: [], favorite_users: [], ignored_topics: [] },
         typing_speed_wpm: 60,
-        signature_phrases: form.signature_phrases.split(",").map((p) => p.trim()).filter(Boolean),
+        signature_phrases: [],
         response_distribution: { fast_p: 0.3, normal_p: 0.5, slow_p: 0.2 },
       };
 
@@ -289,7 +261,7 @@ export default function NewShapePage() {
         <Section title="Voice">
           <Field
             label="Tone"
-            hint="The emotional flavor of their messages. Use a few adjectives — this directly shapes every message they send."
+            hint="The emotional flavor of their messages. A few adjectives — this directly shapes every message they send."
           >
             <input
               className={inputClass}
@@ -300,38 +272,6 @@ export default function NewShapePage() {
             />
           </Field>
 
-          <div className="grid grid-cols-3 gap-4">
-            <Field label="Register" hint="How formal they speak">
-              <select className={selectClass} value={form.register} onChange={(e) => set("register", e.target.value)}>
-                <option value="casual">Casual</option>
-                <option value="gen_z">Gen Z</option>
-                <option value="formal">Formal</option>
-                <option value="literary">Literary</option>
-              </select>
-            </Field>
-
-            <Field label="Message length" hint="How long their replies tend to be">
-              <select className={selectClass} value={form.sentence_length} onChange={(e) => set("sentence_length", e.target.value)}>
-                <option value="short">Short</option>
-                <option value="medium">Medium</option>
-                <option value="long">Long</option>
-                <option value="variable">Variable</option>
-              </select>
-            </Field>
-
-            <Field label="Emoji" hint="How often they use emoji">
-              <select className={selectClass} value={form.emoji_usage} onChange={(e) => set("emoji_usage", e.target.value)}>
-                <option value="never">Never</option>
-                <option value="rare">Rare</option>
-                <option value="moderate">Moderate</option>
-                <option value="frequent">Frequent</option>
-              </select>
-            </Field>
-          </div>
-        </Section>
-
-        {/* Personality */}
-        <Section title="Personality">
           <Field
             label="Talkativeness"
             hint="How likely they are to jump into a conversation. Low = they hold back. High = they respond to almost everything."
@@ -351,30 +291,6 @@ export default function NewShapePage() {
                 <span className="text-sm font-mono text-zinc-500">{talkValue.toFixed(2)}</span>
               </div>
             </div>
-          </Field>
-
-          <Field
-            label="Signature Phrases"
-            hint="Specific expressions this persona uses regularly. Comma-separated. These get woven into their responses."
-          >
-            <input
-              className={inputClass}
-              placeholder="e.g. literally so real, ok but hear me out, that tracks, no notes"
-              value={form.signature_phrases}
-              onChange={(e) => set("signature_phrases", e.target.value)}
-            />
-          </Field>
-
-          <Field
-            label="Values"
-            hint="What they genuinely care about. Comma-separated. Shapes how they react to different topics."
-          >
-            <input
-              className={inputClass}
-              placeholder="e.g. honesty, deep conversation, low drama, protecting friends"
-              value={form.values}
-              onChange={(e) => set("values", e.target.value)}
-            />
           </Field>
         </Section>
 
