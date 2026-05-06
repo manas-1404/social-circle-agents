@@ -28,17 +28,17 @@ export function NavTabs() {
   const pathname = usePathname();
 
   return (
-    <div className="flex items-center gap-1 px-4 py-2 border-b border-zinc-800/60">
+    <div className="flex items-center gap-1 px-4 py-2.5 border-b border-zinc-800/60">
       {tabs.map((tab) => {
         const isActive = pathname === tab.href || pathname.startsWith(tab.href + "/");
         return (
           <Link
             key={tab.href}
             href={tab.href}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-md text-base font-medium transition-all ${
               isActive
                 ? "bg-zinc-800 text-zinc-100"
-                : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900"
+                : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900"
             }`}
           >
             {tab.icon}

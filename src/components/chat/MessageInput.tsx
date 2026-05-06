@@ -45,7 +45,7 @@ export function MessageInput({ onSend, disabled }: MessageInputProps) {
           placeholder="Message…"
           disabled={disabled || sending}
           rows={1}
-          className="flex-1 resize-none bg-transparent text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none disabled:opacity-50 py-0.5"
+          className="flex-1 resize-none bg-transparent text-base text-zinc-100 placeholder:text-zinc-500 focus:outline-none disabled:opacity-50 py-0.5"
           style={{ maxHeight: "120px", overflowY: "auto" }}
         />
         <button
@@ -68,7 +68,7 @@ export function MessageInput({ onSend, disabled }: MessageInputProps) {
           )}
         </button>
       </div>
-      <p className="text-[10px] text-zinc-700 mt-1.5 ml-1">Enter to send · Shift+Enter for newline</p>
+      <p className="text-xs text-zinc-600 mt-1.5 ml-1">Enter to send · Shift+Enter for newline</p>
     </div>
   );
 }

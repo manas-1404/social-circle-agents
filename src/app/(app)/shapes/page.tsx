@@ -14,16 +14,16 @@ export default async function ShapesPage() {
 
   return (
     <div className="max-w-xl mx-auto px-5 py-8">
-      <div className="mb-5 p-4 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-zinc-500 leading-relaxed">
-        <p className="text-zinc-400 font-medium mb-1">What are Shapes?</p>
+      <div className="mb-5 p-4 rounded-lg bg-zinc-900 border border-zinc-800 text-sm text-zinc-400 leading-relaxed">
+        <p className="text-zinc-200 font-semibold mb-1">What are Shapes?</p>
         Shapes are AI personas that live in your chat rooms. Each one has its own personality, backstory, and memory. Add them to a room and they&apos;ll respond on their own — you don&apos;t control what they say.
-        <span className="block mt-1 text-zinc-600">Shapes you create are private to you. You can add them to any of your rooms.</span>
+        <span className="block mt-1 text-zinc-500">Shapes you create are private to you. You can add them to any of your rooms.</span>
       </div>
 
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h1 className="text-lg font-semibold text-zinc-100">Shapes</h1>
-          <p className="text-xs text-zinc-500 mt-0.5">{myShapes.length} persona{myShapes.length !== 1 ? "s" : ""}</p>
+          <h1 className="text-xl font-bold text-zinc-100">Shapes</h1>
+          <p className="text-sm text-zinc-400 mt-0.5">{myShapes.length} persona{myShapes.length !== 1 ? "s" : ""}</p>
         </div>
         <Link
           href="/shapes/new"
@@ -50,20 +50,20 @@ export default async function ShapesPage() {
                 {shape.display_name[0].toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <p className="text-sm font-semibold text-zinc-200">{shape.display_name}</p>
-                  <span className="text-[10px] text-violet-500 bg-violet-950/60 border border-violet-900/50 rounded px-1.5 py-px capitalize">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <p className="text-base font-semibold text-zinc-100">{shape.display_name}</p>
+                  <span className="text-xs text-violet-400 bg-violet-950/60 border border-violet-900/50 rounded px-2 py-0.5 capitalize">
                     {shape.persona_kernel.identity.archetype}
                   </span>
                 </div>
-                <p className="text-xs text-zinc-500 mt-0.5 line-clamp-1">
+                <p className="text-sm text-zinc-400 mt-1 line-clamp-2">
                   {shape.persona_kernel.identity.backstory_short}
                 </p>
                 {shape.persona_kernel.signature_phrases.length > 0 && (
                   <div className="flex gap-1.5 mt-2 flex-wrap">
                     {shape.persona_kernel.signature_phrases.slice(0, 2).map((phrase) => (
-                      <span key={phrase} className="text-[10px] text-zinc-500 bg-zinc-800 rounded px-1.5 py-px">
-                        "{phrase}"
+                      <span key={phrase} className="text-xs text-zinc-400 bg-zinc-800 rounded px-2 py-0.5">
+                        &ldquo;{phrase}&rdquo;
                       </span>
                     ))}
                   </div>

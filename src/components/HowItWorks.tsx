@@ -40,9 +40,9 @@ export function HowItWorks() {
         className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-zinc-900 transition-colors"
       >
         <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold text-zinc-400">How it works</span>
+          <span className="text-sm font-semibold text-zinc-300">How it works</span>
           {!open && (
-            <span className="text-[10px] text-violet-500 bg-violet-950/60 border border-violet-900/40 rounded px-1.5 py-px">
+            <span className="text-xs text-violet-400 bg-violet-950/60 border border-violet-900/40 rounded px-2 py-px">
               new here?
             </span>
           )}
@@ -57,16 +57,16 @@ export function HowItWorks() {
 
       {open && (
         <div className="px-4 pb-4 border-t border-zinc-800">
-          <p className="text-xs text-zinc-600 mt-3 mb-4">
+          <p className="text-sm text-zinc-400 mt-3 mb-4">
             Multi-agent AI chat — you talk, AI personas respond with their own personalities and memory.
           </p>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {steps.map((step, i) => (
               <div key={i} className="flex gap-3">
-                <span className="text-[10px] font-mono text-zinc-700 mt-0.5 flex-shrink-0 w-5">{step.label}</span>
+                <span className="text-xs font-mono text-zinc-600 mt-0.5 flex-shrink-0 w-5">{step.label}</span>
                 <div>
-                  <p className="text-xs font-semibold text-zinc-300">{step.title}</p>
-                  <p className="text-xs text-zinc-600 mt-0.5">{step.description}</p>
+                  <p className="text-sm font-semibold text-zinc-200">{step.title}</p>
+                  <p className="text-sm text-zinc-500 mt-0.5">{step.description}</p>
                 </div>
               </div>
             ))}

@@ -20,10 +20,10 @@ export function Message({ message, isOwnMessage }: MessageProps) {
     : "";
 
   return (
-    <div className={`flex gap-2.5 px-4 py-1.5 group ${isOwnMessage ? "flex-row-reverse" : "flex-row"}`}>
+    <div className={`flex gap-3 px-4 py-2 group ${isOwnMessage ? "flex-row-reverse" : "flex-row"}`}>
       <div className="flex-shrink-0 mt-0.5">
         <div
-          className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold ${
+          className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${
             isShape
               ? "bg-violet-900/70 text-violet-300 border border-violet-800/50"
               : isOwnMessage
@@ -35,24 +35,24 @@ export function Message({ message, isOwnMessage }: MessageProps) {
         </div>
       </div>
 
-      <div className={`flex flex-col max-w-xs md:max-w-md ${isOwnMessage ? "items-end" : "items-start"}`}>
-        <div className="flex items-center gap-1.5 mb-1">
+      <div className={`flex flex-col max-w-xs md:max-w-lg ${isOwnMessage ? "items-end" : "items-start"}`}>
+        <div className="flex items-center gap-2 mb-1">
           <span
-            className={`text-[11px] font-semibold ${
-              isShape ? "text-violet-400" : isOwnMessage ? "text-zinc-400" : "text-emerald-400"
+            className={`text-sm font-semibold ${
+              isShape ? "text-violet-300" : isOwnMessage ? "text-zinc-300" : "text-emerald-300"
             }`}
           >
             {name}
           </span>
           {isShape && (
-            <span className="text-[9px] text-violet-500/80 bg-violet-950/60 border border-violet-900/40 rounded px-1 py-px">
+            <span className="text-xs text-violet-400 bg-violet-950/60 border border-violet-900/40 rounded px-1.5 py-px">
               AI
             </span>
           )}
-          <span className="text-[10px] text-zinc-700 opacity-0 group-hover:opacity-100 transition-opacity">{time}</span>
+          <span className="text-xs text-zinc-600 opacity-0 group-hover:opacity-100 transition-opacity">{time}</span>
         </div>
         <div
-          className={`rounded-xl px-3.5 py-2 text-sm leading-relaxed ${
+          className={`rounded-xl px-4 py-2.5 text-sm leading-relaxed ${
             isOwnMessage
               ? "bg-zinc-800 text-zinc-100 rounded-tr-sm"
               : isShape
