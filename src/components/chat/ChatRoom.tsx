@@ -89,10 +89,6 @@ export function ChatRoom({
     [roomId]
   );
 
-  const handleSleep = useCallback(async () => {
-    await fetch(`/api/rooms/${roomId}/sleep`, { method: "POST" });
-  }, [roomId]);
-
   const handleLoadMore = useCallback(async () => {
     const oldest = messages[0];
     if (!oldest) return;
@@ -124,7 +120,7 @@ export function ChatRoom({
           onLoadMore={messages.length >= 50 ? handleLoadMore : undefined}
         />
 
-        <MessageInput onSend={handleSend} onSleep={handleSleep} />
+        <MessageInput onSend={handleSend} />
       </div>
 
       <div className="hidden md:block w-56 border-l border-zinc-200 dark:border-zinc-800 overflow-y-auto">

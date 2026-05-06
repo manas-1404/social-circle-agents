@@ -4,11 +4,10 @@ import { useState, useRef, type KeyboardEvent } from "react";
 
 type MessageInputProps = {
   onSend: (content: string) => Promise<void>;
-  onSleep?: () => void;
   disabled?: boolean;
 };
 
-export function MessageInput({ onSend, onSleep, disabled }: MessageInputProps) {
+export function MessageInput({ onSend, disabled }: MessageInputProps) {
   const [value, setValue] = useState("");
   const [sending, setSending] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -54,15 +53,6 @@ export function MessageInput({ onSend, onSleep, disabled }: MessageInputProps) {
         >
           {sending ? "…" : "Send"}
         </button>
-        {onSleep && (
-          <button
-            onClick={onSleep}
-            title="Save memories and sleep"
-            className="flex-shrink-0 rounded-xl border border-zinc-200 dark:border-zinc-700 px-3 py-2.5 text-sm text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors"
-          >
-            💤
-          </button>
-        )}
       </div>
     </div>
   );
