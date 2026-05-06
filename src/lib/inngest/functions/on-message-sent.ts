@@ -72,7 +72,7 @@ export const onMessageSent = inngest.createFunction(
       recentMessages.length > 0
         ? Math.floor(
             (Date.now() -
-              (recentMessages[recentMessages.length - 1].created_at?.getTime() ?? Date.now())) /
+              new Date(recentMessages[recentMessages.length - 1].created_at ?? Date.now()).getTime()) /
               1000
           )
         : 0;
@@ -97,7 +97,7 @@ export const onMessageSent = inngest.createFunction(
         const sender = m.sender_shape_id
           ? `shape_${m.sender_shape_id.slice(0, 6)}`
           : `user_${m.sender_user_id?.slice(0, 6)}`;
-        return `[${m.created_at?.toISOString().slice(11, 19)}] @${sender}: ${m.content}`;
+        return `[${new Date(m.created_at ?? Date.now()).toISOString().slice(11, 19)}] @${sender}: ${m.content}`;
       })
       .join("\n");
 
