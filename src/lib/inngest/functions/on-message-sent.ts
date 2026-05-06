@@ -159,6 +159,11 @@ export const onMessageSent = inngest.createFunction(
       callInternal("/api/internal/timer/idle", { roomId, elapsed: "30s" })
     );
 
+    // Consolidate memories for each human in the room after conversation
+    await step.run("consolidate-memories", async () =>
+      callInternal("/api/internal/memory/consolidate-room", { roomId, senderId })
+    );
+
     return { processed: true, responders: directorOutput.responders.length };
   }
 );
