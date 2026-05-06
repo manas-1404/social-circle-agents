@@ -22,7 +22,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <header className="flex items-center justify-between px-5 py-3 border-b border-zinc-800/60 flex-shrink-0">
         <Link href="/rooms" className="flex items-center gap-2">
           <span className="text-violet-400 font-black text-lg tracking-tighter">✦</span>
-          <span className="font-semibold text-base text-zinc-100 tracking-tight">orbit</span>
+          <span className="font-semibold text-base text-zinc-100 tracking-tight">Social Agents</span>
         </Link>
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2 bg-zinc-900 rounded-full pl-1 pr-3 py-1">

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
-  title: "AI Agent Chat",
-  description: "Multi-agent free-will group chat",
+  title: "Social Agents",
+  description: "Multi-agent AI group chat with free will",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
