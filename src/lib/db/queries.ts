@@ -3,13 +3,30 @@ import { messages, rooms, room_members, shapes, shape_state, users } from "./sch
 import { eq, and, desc, gt, sql } from "drizzle-orm";
 
 export async function getRecentMessages(roomId: string, limit = 20) {
-  return db
-    .select()
+  const rows = await db
+    .select({
+      id: messages.id,
+      room_id: messages.room_id,
+      sender_user_id: messages.sender_user_id,
+      sender_shape_id: messages.sender_shape_id,
+      content: messages.content,
+      addressing: messages.addressing,
+      strategy: messages.strategy,
+      reply_to_message_id: messages.reply_to_message_id,
+      director_run_id: messages.director_run_id,
+      tokens_used: messages.tokens_used,
+      created_at: messages.created_at,
+      sender_display_name: sql<string>`COALESCE(${shapes.display_name}, ${users.name})`,
+      sender_avatar: shapes.avatar_url,
+    })
     .from(messages)
+    .leftJoin(shapes, eq(messages.sender_shape_id, shapes.id))
+    .leftJoin(users, eq(messages.sender_user_id, users.id))
     .where(eq(messages.room_id, roomId))
     .orderBy(desc(messages.created_at))
-    .limit(limit)
-    .then((rows) => rows.reverse());
+    .limit(limit);
+
+  return rows.reverse();
 }
 
 export async function getRoomWithMembers(roomId: string) {

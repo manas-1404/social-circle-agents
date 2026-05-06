@@ -28,7 +28,8 @@ function HumanIcon() {
 
 export function Message({ message, isOwnMessage }: MessageProps) {
   const isShape = !!message.sender_shape_id;
-  const name = message.sender_display_name ?? (isShape ? "Shape" : "You");
+  const isOwnHuman = isOwnMessage && !isShape;
+  const name = message.sender_display_name ?? (isShape ? "Shape" : isOwnHuman ? "You" : "User");
   const initial = name[0]?.toUpperCase();
   const time = message.created_at
     ? new Date(message.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })

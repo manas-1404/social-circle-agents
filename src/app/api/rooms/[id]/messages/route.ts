@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { messages, room_members } from "@/lib/db/schema";
+import { messages, room_members, shapes, users } from "@/lib/db/schema";
 import { auth } from "@/lib/auth";
 import { triggerRoomEvent } from "@/lib/pusher/server";
 import { pushRoomEvent, pushLastMessage } from "@/lib/redis";
 import { inngest, EVENTS } from "@/lib/inngest/client";
-import { eq, and, desc, lt } from "drizzle-orm";
+import { eq, and, desc, lt, sql } from "drizzle-orm";
 import { headers } from "next/headers";
 
 export async function GET(
@@ -23,9 +23,25 @@ export async function GET(
   });
   if (!member) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  const query = db
-    .select()
+  const rows = await db
+    .select({
+      id: messages.id,
+      room_id: messages.room_id,
+      sender_user_id: messages.sender_user_id,
+      sender_shape_id: messages.sender_shape_id,
+      content: messages.content,
+      addressing: messages.addressing,
+      strategy: messages.strategy,
+      reply_to_message_id: messages.reply_to_message_id,
+      director_run_id: messages.director_run_id,
+      tokens_used: messages.tokens_used,
+      created_at: messages.created_at,
+      sender_display_name: sql<string>`COALESCE(${shapes.display_name}, ${users.name})`,
+      sender_avatar: shapes.avatar_url,
+    })
     .from(messages)
+    .leftJoin(shapes, eq(messages.sender_shape_id, shapes.id))
+    .leftJoin(users, eq(messages.sender_user_id, users.id))
     .where(
       before
         ? and(eq(messages.room_id, id), lt(messages.created_at, new Date(before)))
@@ -34,7 +50,6 @@ export async function GET(
     .orderBy(desc(messages.created_at))
     .limit(50);
 
-  const rows = await query;
   return NextResponse.json(rows.reverse());
 }
 
