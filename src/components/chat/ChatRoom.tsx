@@ -101,7 +101,7 @@ export function ChatRoom({
   }, [messages, roomId]);
 
   return (
-    <div className="flex h-full bg-zinc-950">
+    <div className="flex h-full max-h-full bg-zinc-950 overflow-hidden">
       <div className="flex flex-1 flex-col overflow-hidden">
         <div className="border-b border-zinc-800/60 px-4 py-3 flex items-center gap-3 bg-zinc-950">
           <div className="flex flex-col flex-1">
