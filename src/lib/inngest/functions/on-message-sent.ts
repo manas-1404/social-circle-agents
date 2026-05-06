@@ -35,12 +35,16 @@ export const onMessageSent = inngest.createFunction(
   },
   async ({ event, step }: { event: { data: Record<string, unknown> }; step: { run: <T>(id: string, fn: () => Promise<T>) => Promise<T>; sleep: (id: string, duration: string) => Promise<void> } }) => {
     const { roomId, senderId } = event.data as { roomId: string; senderId: string; messageId?: string; content?: string };
+    console.log("[on-message-sent] start", { roomId, senderId });
 
     const room = await step.run("fetch-room", async () => {
       return db.query.rooms.findFirst({ where: eq(rooms.id, roomId) });
     });
 
-    if (!room || !room.free_will_enabled) return { skipped: true, reason: "free_will_disabled" };
+    if (!room || !room.free_will_enabled) {
+      console.log("[on-message-sent] skipped — free_will_disabled or room not found", { roomId });
+      return { skipped: true, reason: "free_will_disabled" };
+    }
 
     const humanPresent = await step.run("check-humans", async () => {
       const member = await db.query.room_members.findFirst({
@@ -48,8 +52,10 @@ export const onMessageSent = inngest.createFunction(
       });
       return !!member;
     });
+    console.log("[on-message-sent] humanPresent:", humanPresent);
 
     const shapesInRoom = await step.run("get-shapes", async () => getShapesInRoom(roomId));
+    console.log("[on-message-sent] shapesInRoom:", shapesInRoom.map((s) => s.shape.slug));
 
     const prefilterResult = await step.run("prefilter", async () => {
       return runPrefilter({
@@ -61,8 +67,12 @@ export const onMessageSent = inngest.createFunction(
         dailyTokenBudget: room.daily_token_budget ?? 500_000,
       });
     });
+    console.log("[on-message-sent] prefilter:", prefilterResult);
 
-    if (!prefilterResult.pass) return { skipped: true, reason: prefilterResult.reason };
+    if (!prefilterResult.pass) {
+      console.log("[on-message-sent] skipped — prefilter blocked:", prefilterResult.reason);
+      return { skipped: true, reason: prefilterResult.reason };
+    }
 
     const recentMessages = await step.run("fetch-recent-messages", async () =>
       getRecentMessages(roomId, 20)
@@ -77,6 +87,7 @@ export const onMessageSent = inngest.createFunction(
           )
         : 0;
 
+    console.log("[on-message-sent] calling director, secondsSinceLast:", secondsSinceLast);
     const directorOutput: DirectorOutput = await step.run("run-director", async () =>
       callInternal("/api/internal/director/run", {
         roomId,
@@ -87,8 +98,10 @@ export const onMessageSent = inngest.createFunction(
         secondsSinceLastMessage: secondsSinceLast,
       })
     );
+    console.log("[on-message-sent] director output:", JSON.stringify(directorOutput));
 
     if (!directorOutput.responders?.length) {
+      console.log("[on-message-sent] skipped — director chose no responders, reason:", directorOutput.skip_reason);
       return { skipped: true, reason: directorOutput.skip_reason };
     }
 
@@ -104,6 +117,7 @@ export const onMessageSent = inngest.createFunction(
     const earlierResponders: { shapeName: string; text: string }[] = [];
 
     for (const responder of directorOutput.responders) {
+      console.log("[on-message-sent] drafting for shape:", responder.shape_id, "strategy:", responder.strategy);
       const draftResult = await step.run(`draft-${responder.shape_id}`, async () =>
         callInternal("/api/internal/draft/run", {
           roomId,
@@ -116,6 +130,7 @@ export const onMessageSent = inngest.createFunction(
           earlierResponders,
         })
       );
+      console.log("[on-message-sent] draft result for", responder.shape_id, ":", JSON.stringify(draftResult));
 
       if (!draftResult.silence && draftResult.message) {
         const shapeName = await step.run(`get-shape-name-${responder.shape_id}`, async () => {

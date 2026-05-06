@@ -34,8 +34,12 @@ export async function POST(req: NextRequest) {
   // Wait the personality-based delay
   if (delayMs > 0) await new Promise((r) => setTimeout(r, delayMs));
 
+  console.log("[draft] start for shape:", shapeId, "room:", roomId, "strategy:", strategy);
   const shape = await db.query.shapes.findFirst({ where: eq(shapes.id, shapeId) });
-  if (!shape) return NextResponse.json({ error: "Shape not found" }, { status: 404 });
+  if (!shape) {
+    console.log("[draft] shape not found:", shapeId);
+    return NextResponse.json({ error: "Shape not found" }, { status: 404 });
+  }
 
   // Retrieve top-3 memories by cosine similarity (simplified: get recent memories)
   const recentMemories = await db
@@ -62,7 +66,9 @@ export async function POST(req: NextRequest) {
     earlierResponders,
   });
 
+  console.log("[draft] generated text (silence:", draft.silence, "):", draft.text?.slice(0, 80));
   if (draft.silence) {
+    console.log("[draft] shape chose silence");
     await triggerTypingStop(roomId, shapeId);
     return NextResponse.json({ silence: true });
   }
@@ -89,8 +95,8 @@ export async function POST(req: NextRequest) {
     .limit(5);
 
   if (detectLoop(finalText, shapeRecentMessages.map((m) => m.content), [])) {
+    console.log("[draft] loop detected for shape:", shapeId, "— silencing");
     await triggerTypingStop(roomId, shapeId);
-    // Put shape on 5-min cooldown
     await upsertShapeState(shapeId, roomId, { cooldown_until: new Date(Date.now() + 5 * 60 * 1000) });
     return NextResponse.json({ silence: true, reason: "loop_detected" });
   }
@@ -131,5 +137,6 @@ export async function POST(req: NextRequest) {
   await incrementRoomTokensRedis(roomId, draft.tokensUsed);
   await upsertShapeState(shapeId, roomId, { last_spoke_at: new Date() });
 
+  console.log("[draft] message sent for shape:", shapeId, "tokens:", draft.tokensUsed);
   return NextResponse.json({ message, tokensUsed: draft.tokensUsed });
 }

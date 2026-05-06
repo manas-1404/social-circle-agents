@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
   );
 
   const msgLog = recentMessages.map((m) => ({
-    time: m.created_at?.toISOString().slice(11, 19) ?? "",
+    time: new Date(m.created_at ?? Date.now()).toISOString().slice(11, 19),
     sender: m.sender_shape_id
       ? (shapesInRoom.find((s) => s.shape.id === m.sender_shape_id)?.shape.slug ?? "shape")
       : `user_${m.sender_user_id?.slice(0, 6)}`,
@@ -50,6 +50,7 @@ export async function POST(req: NextRequest) {
     content: m.content,
   }));
 
+  console.log("[director] running for room:", roomId, "shapes:", shapesInRoom.map((s) => s.shape.slug), "trigger:", triggerEvent);
   const { output, tokensUsed, latencyMs } = await runDirector({
     roomMode: roomMode ?? "casual",
     activeHumanIds: activeHumanIds ?? [],
@@ -72,5 +73,6 @@ export async function POST(req: NextRequest) {
     tokens_used: tokensUsed,
   });
 
+  console.log("[director] output:", JSON.stringify(output), "tokens:", tokensUsed, "latency:", latencyMs, "ms");
   return NextResponse.json(output);
 }
