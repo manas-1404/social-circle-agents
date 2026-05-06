@@ -10,7 +10,8 @@
       "Bash(node -e ' *)",
       "Bash(npx next *)",
       "Bash(findstr *)",
-      "Bash(xargs grep -l \"betterAuth\\\\|better-auth\")"
+      "Bash(xargs grep -l \"betterAuth\\\\|better-auth\")",
+      "WebFetch(domain:www.inngest.com)"
     ]
   }
 }

@@ -5,6 +5,11 @@ import { auth } from "@/lib/auth";
 import { getUserRooms } from "@/lib/db/queries";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
+import { randomBytes } from "crypto";
+
+function generateInviteCode() {
+  return randomBytes(6).toString("hex");
+}
 
 export async function GET() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -24,7 +29,7 @@ export async function POST(req: NextRequest) {
 
   const [room] = await db
     .insert(rooms)
-    .values({ name, owner_id: session.user.id, mode })
+    .values({ name, owner_id: session.user.id, mode, invite_code: generateInviteCode() })
     .returning();
 
   await db.insert(room_members).values({

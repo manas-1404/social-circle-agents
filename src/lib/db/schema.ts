@@ -50,6 +50,7 @@ export const rooms = pgTable("rooms", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   owner_id: text("owner_id").references(() => users.id),
+  invite_code: text("invite_code").unique(),
   mode: text("mode").notNull().default("casual"),
   prevent_engine_override: boolean("prevent_engine_override").default(false),
   free_will_enabled: boolean("free_will_enabled").default(true),

@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { MessageList } from "./MessageList";
 import { MessageInput } from "./MessageInput";
 import { PresenceList } from "./PresenceList";
+import { InviteButton } from "./InviteButton";
 import { subscribeToRoom } from "@/lib/pusher/client";
 import type { Message } from "@/lib/db/schema";
 import type { TypingShape } from "./TypingIndicator";
@@ -11,6 +12,7 @@ import type { TypingShape } from "./TypingIndicator";
 type ChatRoomProps = {
   roomId: string;
   roomName: string;
+  inviteCode?: string | null;
   initialMessages: (Message & { sender_display_name?: string; sender_avatar?: string | null })[];
   currentUserId: string;
   shapes: { id: string; display_name: string; avatar_url?: string | null }[];
@@ -19,6 +21,7 @@ type ChatRoomProps = {
 export function ChatRoom({
   roomId,
   roomName,
+  inviteCode,
   initialMessages,
   currentUserId,
   shapes,
@@ -93,6 +96,7 @@ export function ChatRoom({
               {shapes.length} shape{shapes.length !== 1 ? "s" : ""} active
             </span>
           </div>
+          {inviteCode && <InviteButton inviteCode={inviteCode} />}
         </div>
 
         {/* Messages */}

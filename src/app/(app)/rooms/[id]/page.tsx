@@ -38,6 +38,7 @@ export default async function ChatRoomPage({
     <ChatRoom
       roomId={roomId}
       roomName={data.room.name}
+      inviteCode={data.room.invite_code}
       initialMessages={initialMessages}
       currentUserId={session.user.id}
       shapes={shapes}

@@ -21,7 +21,8 @@ export default function SignInPage() {
       if (result.error) {
         setError(result.error.message ?? "Sign in failed");
       } else {
-        router.push("/rooms");
+        const params = new URLSearchParams(window.location.search);
+        router.push(params.get("next") ?? "/rooms");
       }
     } catch {
       setError("Something went wrong. Please try again.");
