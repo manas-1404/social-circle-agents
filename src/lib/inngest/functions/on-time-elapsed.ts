@@ -26,6 +26,8 @@ export const onTimeElapsed = inngest.createFunction(
   {
     id: "on-time-elapsed",
     retries: 2,
+    concurrency: { limit: 2, key: "event.data.roomId" },
+    throttle: { limit: 3, period: "10s" },
     triggers: [{ event: EVENTS.TIME_ELAPSED }],
   },
   async ({ event, step }: { event: { data: Record<string, unknown> }; step: { run: <T>(id: string, fn: () => Promise<T>) => Promise<T> } }) => {

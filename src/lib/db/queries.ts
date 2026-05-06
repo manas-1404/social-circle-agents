@@ -1,6 +1,6 @@
 import { db } from "./index";
 import { messages, rooms, room_members, shapes, shape_state, users } from "./schema";
-import { eq, and, desc, gt, sql } from "drizzle-orm";
+import { eq, and, desc, gt, sql, max } from "drizzle-orm";
 
 export async function getRecentMessages(roomId: string, limit = 20) {
   const rows = await db
@@ -98,8 +98,13 @@ export async function incrementRoomTokens(roomId: string, tokens: number) {
 
 export async function getUserRooms(userId: string) {
   return db
-    .select({ room: rooms })
+    .select({
+      room: rooms,
+      lastMessageAt: max(messages.created_at),
+    })
     .from(room_members)
     .innerJoin(rooms, eq(room_members.room_id, rooms.id))
-    .where(eq(room_members.user_id, userId));
+    .leftJoin(messages, eq(messages.room_id, rooms.id))
+    .where(eq(room_members.user_id, userId))
+    .groupBy(rooms.id);
 }

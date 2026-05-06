@@ -37,6 +37,10 @@ export function ChatRoom({
   const [humans, setHumans] = useState<HumanMember[]>(initialHumans);
 
   useEffect(() => {
+    localStorage.setItem(`room_visited_${roomId}`, new Date().toISOString());
+  }, [roomId]);
+
+  useEffect(() => {
     const unsub = subscribeToRoom(roomId, {
       onMessage: (data) => {
         const msg = data as Message & { sender_display_name?: string; sender_avatar?: string | null };

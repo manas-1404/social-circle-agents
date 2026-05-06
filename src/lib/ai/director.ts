@@ -2,6 +2,7 @@ import { generateObject } from "ai";
 import { gateway } from "./gateway";
 import { directorOutputSchema, type DirectorOutput } from "./schemas/director";
 import { DIRECTOR_SYSTEM_PROMPT, buildDirectorUserMessage } from "./prompts/director";
+import { withRetry } from "./retry";
 
 export type DirectorParams = Parameters<typeof buildDirectorUserMessage>[0];
 
@@ -14,12 +15,14 @@ export async function runDirector(params: DirectorParams): Promise<{
   const userMessage = buildDirectorUserMessage(params);
 
   try {
-    const { object, usage } = await generateObject({
-      model: gateway("anthropic/claude-haiku-4-5"),
-      schema: directorOutputSchema,
-      system: DIRECTOR_SYSTEM_PROMPT,
-      prompt: userMessage,
-    });
+    const { object, usage } = await withRetry(() =>
+      generateObject({
+        model: gateway("anthropic/claude-haiku-4-5"),
+        schema: directorOutputSchema,
+        system: DIRECTOR_SYSTEM_PROMPT,
+        prompt: userMessage,
+      })
+    );
 
     // Enforce max 2 responders (belt-and-suspenders, schema allows array but we cap here)
     const capped = { ...object, responders: object.responders.slice(0, 2) };

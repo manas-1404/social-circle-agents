@@ -2,6 +2,7 @@ import { generateText } from "ai";
 import { gateway } from "./gateway";
 import { renderPersonaSystemPrompt, renderPersonaUserMessage } from "@/lib/persona/render";
 import type { PersonaKernel } from "@/lib/persona/schema";
+import { withRetry } from "./retry";
 
 export type DraftParams = {
   persona: PersonaKernel;
@@ -32,12 +33,14 @@ export async function draftShapeResponse(params: DraftParams): Promise<DraftResu
     params.earlierResponders
   );
 
-  const { text, usage } = await generateText({
-    model: gateway("anthropic/claude-sonnet-4-6"),
-    system,
-    prompt: userMessage,
-    maxOutputTokens: 200,
-  });
+  const { text, usage } = await withRetry(() =>
+    generateText({
+      model: gateway("anthropic/claude-sonnet-4-6"),
+      system,
+      prompt: userMessage,
+      maxOutputTokens: 200,
+    })
+  );
 
   const cleaned = text.trim().replace(/^["']|["']$/g, "");
 

@@ -30,7 +30,8 @@ export const onMessageSent = inngest.createFunction(
   {
     id: "on-message-sent",
     retries: 3,
-    concurrency: { limit: 5, key: "event.data.roomId" },
+    concurrency: { limit: 2, key: "event.data.roomId" },
+    debounce: { key: "event.data.roomId", period: "4s" },
     triggers: [{ event: EVENTS.MESSAGE_SENT }],
   },
   async ({ event, step }: { event: { data: Record<string, unknown> }; step: { run: <T>(id: string, fn: () => Promise<T>) => Promise<T>; sleep: (id: string, duration: string) => Promise<void> } }) => {
