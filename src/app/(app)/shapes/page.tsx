@@ -45,30 +45,38 @@ export default async function ShapesPage() {
       ) : (
         <ul className="space-y-2">
           {myShapes.map((shape) => (
-            <li key={shape.id} className="group flex items-start gap-3 px-4 py-3.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-transparent hover:border-zinc-700 transition-all">
-              <div className="w-9 h-9 rounded-lg bg-violet-900/60 border border-violet-800/50 flex items-center justify-center text-sm font-bold text-violet-300 flex-shrink-0">
-                {shape.display_name[0].toUpperCase()}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <p className="text-base font-semibold text-zinc-100">{shape.display_name}</p>
-                  <span className="text-xs text-violet-400 bg-violet-950/60 border border-violet-900/50 rounded px-2 py-0.5 capitalize">
-                    {shape.persona_kernel.identity.archetype}
-                  </span>
+            <li key={shape.id}>
+              <Link
+                href={`/shapes/${shape.id}`}
+                className="group flex items-start gap-3 px-4 py-3.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-600 transition-all"
+              >
+                <div className="w-10 h-10 rounded-lg bg-violet-900/60 border border-violet-800/50 flex items-center justify-center text-base font-bold text-violet-300 flex-shrink-0">
+                  {shape.display_name[0].toUpperCase()}
                 </div>
-                <p className="text-sm text-zinc-400 mt-1 line-clamp-2">
-                  {shape.persona_kernel.identity.backstory_short}
-                </p>
-                {shape.persona_kernel.signature_phrases.length > 0 && (
-                  <div className="flex gap-1.5 mt-2 flex-wrap">
-                    {shape.persona_kernel.signature_phrases.slice(0, 2).map((phrase) => (
-                      <span key={phrase} className="text-xs text-zinc-400 bg-zinc-800 rounded px-2 py-0.5">
-                        &ldquo;{phrase}&rdquo;
-                      </span>
-                    ))}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className="text-base font-semibold text-zinc-100">{shape.display_name}</p>
+                    <span className="text-xs text-violet-400 bg-violet-950/60 border border-violet-900/50 rounded px-2 py-0.5 capitalize">
+                      {shape.persona_kernel.identity.archetype}
+                    </span>
                   </div>
-                )}
-              </div>
+                  <p className="text-sm text-zinc-400 mt-1 line-clamp-2">
+                    {shape.persona_kernel.identity.backstory_short}
+                  </p>
+                  {shape.persona_kernel.signature_phrases.length > 0 && (
+                    <div className="flex gap-1.5 mt-2 flex-wrap">
+                      {shape.persona_kernel.signature_phrases.slice(0, 2).map((phrase) => (
+                        <span key={phrase} className="text-xs text-zinc-400 bg-zinc-800 rounded px-2 py-0.5">
+                          &ldquo;{phrase}&rdquo;
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <svg className="text-zinc-600 group-hover:text-zinc-400 transition-colors mt-1 flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
+              </Link>
             </li>
           ))}
         </ul>
