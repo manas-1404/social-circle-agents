@@ -1,7 +1,5 @@
 import { embedMany, embed } from "ai";
-import { gateway } from "./gateway";
-
-const EMBEDDING_MODEL = gateway.textEmbeddingModel("openai/text-embedding-3-small");
+import { embeddingModel as EMBEDDING_MODEL } from "./providers";
 
 export async function embedTexts(texts: string[]): Promise<number[][]> {
   if (texts.length === 0) return [];

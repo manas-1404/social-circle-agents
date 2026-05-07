@@ -1,5 +1,4 @@
-import { generateObject } from "ai";
-import { gateway } from "./gateway";
+import { generateJson } from "./providers";
 import { memoryOutputSchema, type MemoryOutput } from "./schemas/memory";
 import { buildMemoryConsolidationPrompt } from "./prompts/memory-consolidate";
 
@@ -11,8 +10,7 @@ export async function consolidateMemories(params: {
 }): Promise<MemoryOutput> {
   const prompt = buildMemoryConsolidationPrompt(params);
 
-  const { object } = await generateObject({
-    model: gateway("anthropic/claude-haiku-4-5"),
+  const { object } = await generateJson({
     schema: memoryOutputSchema,
     prompt,
   });

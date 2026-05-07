@@ -1,5 +1,4 @@
-import { generateObject } from "ai";
-import { gateway } from "./gateway";
+import { generateJson } from "./providers";
 import { directorOutputSchema, type DirectorOutput } from "./schemas/director";
 import { DIRECTOR_SYSTEM_PROMPT, buildDirectorUserMessage } from "./prompts/director";
 import { withRetry } from "./retry";
@@ -16,8 +15,7 @@ export async function runDirector(params: DirectorParams): Promise<{
 
   try {
     const { object, usage } = await withRetry(() =>
-      generateObject({
-        model: gateway("anthropic/claude-haiku-4-5"),
+      generateJson({
         schema: directorOutputSchema,
         system: DIRECTOR_SYSTEM_PROMPT,
         prompt: userMessage,

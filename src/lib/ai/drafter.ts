@@ -1,5 +1,5 @@
 import { generateText } from "ai";
-import { gateway } from "./gateway";
+import { getLLM } from "./providers";
 import { renderPersonaSystemPrompt, renderPersonaUserMessage } from "@/lib/persona/render";
 import type { PersonaKernel } from "@/lib/persona/schema";
 import { withRetry } from "./retry";
@@ -35,7 +35,7 @@ export async function draftShapeResponse(params: DraftParams): Promise<DraftResu
 
   const { text, usage } = await withRetry(() =>
     generateText({
-      model: gateway("anthropic/claude-sonnet-4-6"),
+      model: getLLM(),
       system,
       prompt: userMessage,
       maxOutputTokens: 200,
