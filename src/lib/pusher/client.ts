@@ -18,6 +18,7 @@ export function subscribeToRoom(
   roomId: string,
   handlers: {
     onMessage?: (data: unknown) => void;
+    onMessageUpdated?: (data: unknown) => void;
     onTypingStart?: (data: unknown) => void;
     onTypingStop?: (data: unknown) => void;
     onMemberJoined?: (data: unknown) => void;
@@ -28,6 +29,7 @@ export function subscribeToRoom(
   const channel = client.subscribe(`private-room-${roomId}`);
 
   if (handlers.onMessage) channel.bind("message.sent", handlers.onMessage);
+  if (handlers.onMessageUpdated) channel.bind("message.updated", handlers.onMessageUpdated);
   if (handlers.onTypingStart) channel.bind("typing.start", handlers.onTypingStart);
   if (handlers.onTypingStop) channel.bind("typing.stop", handlers.onTypingStop);
   if (handlers.onMemberJoined) channel.bind("member.joined", handlers.onMemberJoined);

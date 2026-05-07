@@ -91,6 +91,8 @@ export const messages = pgTable(
     director_run_id: uuid("director_run_id"),
     tokens_used: integer("tokens_used"),
     created_at: timestamp("created_at").defaultNow(),
+    updated_at: timestamp("updated_at"),
+    is_edited: boolean("is_edited").default(false),
   },
   (t) => [index("messages_room_created_idx").on(t.room_id, t.created_at)]
 );

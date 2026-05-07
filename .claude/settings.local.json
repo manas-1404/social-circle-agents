@@ -11,7 +11,9 @@
       "Bash(npx next *)",
       "Bash(findstr *)",
       "Bash(xargs grep -l \"betterAuth\\\\|better-auth\")",
-      "WebFetch(domain:www.inngest.com)"
+      "WebFetch(domain:www.inngest.com)",
+      "WebFetch(domain:neon.tech)",
+      "WebFetch(domain:neon.com)"
     ]
   }
 }

@@ -32,9 +32,10 @@ type MessageListProps = {
   currentUserId: string;
   typers: TypingShape[];
   onLoadMore?: () => void;
+  onEdit?: (messageId: string, newContent: string) => Promise<void>;
 };
 
-export function MessageList({ messages, currentUserId, typers, onLoadMore }: MessageListProps) {
+export function MessageList({ messages, currentUserId, typers, onLoadMore, onEdit }: MessageListProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -66,6 +67,7 @@ export function MessageList({ messages, currentUserId, typers, onLoadMore }: Mes
             <Message
               message={msg}
               isOwnMessage={msg.sender_user_id === currentUserId}
+              onEdit={onEdit}
             />
           </div>
         );

@@ -53,6 +53,12 @@ export function ChatRoom({
           setTypers((prev) => prev.filter((t) => t.shapeId !== msg.sender_shape_id));
         }
       },
+      onMessageUpdated: (data) => {
+        const { id, content, is_edited } = data as { id: string; content: string; is_edited: boolean };
+        setMessages((prev) =>
+          prev.map((m) => (m.id === id ? { ...m, content, is_edited } : m))
+        );
+      },
       onTypingStart: (data) => {
         const { shape_id, shape_name } = data as { shape_id: string; shape_name: string };
         setTypers((prev) => {
@@ -94,6 +100,18 @@ export function ChatRoom({
     [roomId]
   );
 
+  const handleEdit = useCallback(async (messageId: string, newContent: string) => {
+    const res = await fetch(`/api/rooms/${roomId}/messages/${messageId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content: newContent }),
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error ?? "Failed to edit message");
+    }
+  }, [roomId]);
+
   const handleLoadMore = useCallback(async () => {
     const oldest = messages[0];
     if (!oldest) return;
@@ -123,6 +141,7 @@ export function ChatRoom({
           currentUserId={currentUserId}
           typers={typers}
           onLoadMore={messages.length >= 50 ? handleLoadMore : undefined}
+          onEdit={handleEdit}
         />
 
         {shapes.length === 0 && (
