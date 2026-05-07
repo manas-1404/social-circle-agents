@@ -21,15 +21,19 @@ export async function POST(req: NextRequest) {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const { slug, display_name, persona_kernel } = body;
-  if (!slug || !display_name || !persona_kernel) {
-    return NextResponse.json({ error: "slug, display_name, persona_kernel required" }, { status: 400 });
+  const { display_name, persona_kernel } = body;
+  if (!display_name || !persona_kernel) {
+    return NextResponse.json({ error: "display_name and persona_kernel required" }, { status: 400 });
   }
+
+  const base = display_name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  const randomSuffix = Math.random().toString(36).slice(2, 6);
+  const finalSlug = `${base}-${randomSuffix}`;
 
   const [shape] = await db
     .insert(shapes)
     .values({
-      slug,
+      slug: finalSlug,
       display_name,
       persona_kernel,
       creator_id: session.user.id,

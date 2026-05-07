@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 type FormState = {
-  slug: string;
   display_name: string;
   archetype: string;
   backstory: string;
@@ -18,7 +17,6 @@ const TEMPLATES = [
     tag: "hype friend",
     desc: "Warm, energetic, Gen Z. Responds to everything.",
     form: {
-      slug: "mira",
       display_name: "Mira",
       archetype: "extrovert best friend, group chat catalyst",
       backstory: "Hyper-online art student who treats every group chat like her living room. Says hi to everyone.",
@@ -31,7 +29,6 @@ const TEMPLATES = [
     tag: "the realist",
     desc: "Dry, contrarian, tells the hard truth.",
     form: {
-      slug: "ozzy",
       display_name: "Ozzy",
       archetype: "the friend who tells you the hard truth",
       backstory: "Software engineer who rolls his eyes at everything but actually cares. Won't validate to your face.",
@@ -44,7 +41,6 @@ const TEMPLATES = [
     tag: "deep thinker",
     desc: "Quiet, thoughtful, says something profound.",
     form: {
-      slug: "kai",
       display_name: "Kai",
       archetype: "the quiet one who occasionally drops something profound",
       backstory: "Philosophy major who lurks more than they speak. When they speak, people listen.",
@@ -94,7 +90,6 @@ export default function NewShapePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState<FormState>({
-    slug: "",
     display_name: "",
     archetype: "",
     backstory: "",
@@ -141,7 +136,7 @@ export default function NewShapePage() {
       const res = await fetch("/api/shapes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug: form.slug, display_name: form.display_name, persona_kernel }),
+        body: JSON.stringify({ display_name: form.display_name, persona_kernel }),
       });
 
       if (!res.ok) {
@@ -212,19 +207,6 @@ export default function NewShapePage() {
               placeholder="e.g. Alex, Nova, Remy"
               value={form.display_name}
               onChange={(e) => set("display_name", e.target.value)}
-              required
-            />
-          </Field>
-
-          <Field
-            label="Slug"
-            hint="Unique handle used internally. Lowercase letters, numbers, hyphens only. Can't be changed later."
-          >
-            <input
-              className={inputClass}
-              placeholder="e.g. alex, cool-ai, nova-v2"
-              value={form.slug}
-              onChange={(e) => set("slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))}
               required
             />
           </Field>
