@@ -8,6 +8,7 @@ import { InviteButton } from "./InviteButton";
 import { subscribeToRoom } from "@/lib/pusher/client";
 import type { Message } from "@/lib/db/schema";
 import type { TypingShape } from "./TypingIndicator";
+import Link from "next/link";
 
 type ShapeMember = { id: string; display_name: string; avatar_url?: string | null };
 type HumanMember = { id: string; display_name: string };
@@ -123,6 +124,22 @@ export function ChatRoom({
           typers={typers}
           onLoadMore={messages.length >= 50 ? handleLoadMore : undefined}
         />
+
+        {shapes.length === 0 && (
+          <div className="mx-4 mb-3 rounded-lg border border-dashed border-zinc-700 bg-zinc-900/60 px-4 py-4 flex items-start gap-3">
+            <span className="text-violet-400 text-lg mt-0.5">✦</span>
+            <div>
+              <p className="text-base font-semibold text-zinc-200">No shapes in this room yet</p>
+              <p className="text-sm text-zinc-500 mt-0.5">
+                Add a shape to start the conversation.{" "}
+                <Link href="/shapes/new" className="text-violet-400 hover:text-violet-300 underline underline-offset-2 transition-colors">
+                  Create one
+                </Link>{" "}
+                or use the panel on the right to add an existing shape.
+              </p>
+            </div>
+          </div>
+        )}
 
         <MessageInput onSend={handleSend} />
       </div>
