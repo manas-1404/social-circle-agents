@@ -70,7 +70,7 @@ export function Message({ message, isOwnMessage, onEdit }: MessageProps) {
         </div>
       </div>
 
-      <div className={`flex flex-col max-w-xs md:max-w-lg ${isOwnMessage ? "items-end" : "items-start"}`}>
+      <div className={`flex flex-col max-w-[80%] ${isOwnMessage ? "items-end" : "items-start"}`}>
         <div className="flex items-center gap-2 mb-1">
           <span
             className={`text-sm font-semibold ${

@@ -5,6 +5,7 @@ import { MessageList } from "./MessageList";
 import { MessageInput } from "./MessageInput";
 import { PresenceList } from "./PresenceList";
 import { InviteButton } from "./InviteButton";
+import { UnreadDot } from "@/components/UnreadDot";
 import { subscribeToRoom } from "@/lib/pusher/client";
 import type { Message } from "@/lib/db/schema";
 import type { TypingShape } from "./TypingIndicator";
@@ -12,6 +13,7 @@ import Link from "next/link";
 
 type ShapeMember = { id: string; display_name: string; avatar_url?: string | null };
 type HumanMember = { id: string; display_name: string };
+type RoomSummary = { id: string; name: string; lastMessageAt: string | null };
 
 type ChatRoomProps = {
   roomId: string;
@@ -21,6 +23,7 @@ type ChatRoomProps = {
   currentUserId: string;
   shapes: ShapeMember[];
   humans: HumanMember[];
+  rooms: RoomSummary[];
 };
 
 export function ChatRoom({
@@ -31,6 +34,7 @@ export function ChatRoom({
   currentUserId,
   shapes: initialShapes,
   humans: initialHumans,
+  rooms,
 }: ChatRoomProps) {
   const [messages, setMessages] = useState(initialMessages);
   const [typers, setTypers] = useState<TypingShape[]>([]);
@@ -124,17 +128,97 @@ export function ChatRoom({
   }, [messages, roomId]);
 
   return (
-    <div className="flex h-full max-h-full bg-zinc-950 overflow-hidden">
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <div className="border-b border-zinc-800/60 px-4 py-3 flex items-center gap-3 bg-zinc-950">
-          <div className="flex flex-col flex-1">
-            <h1 className="text-base font-bold text-zinc-100">{roomName}</h1>
-            <span className="text-sm text-zinc-500">
+    <div className="flex h-full overflow-hidden bg-zinc-950">
+
+      {/* ── Left sidebar: rooms list ── */}
+      <div className="hidden lg:flex flex-col w-64 flex-shrink-0 border-r border-zinc-800/60">
+
+        {/* Sidebar header */}
+        <div className="flex items-center justify-between px-4 py-4 border-b border-zinc-800/40 flex-shrink-0">
+          <span className="text-xs font-semibold uppercase tracking-widest text-zinc-500">Chats</span>
+          <Link
+            href="/rooms"
+            className="w-6 h-6 rounded flex items-center justify-center text-zinc-600 hover:text-zinc-300 hover:bg-zinc-800 transition-colors"
+            title="All chats"
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+          </Link>
+        </div>
+
+        {/* Rooms list */}
+        <div className="flex-1 overflow-y-auto py-2">
+          {rooms.map((room) => {
+            const isActive = room.id === roomId;
+            return (
+              <Link
+                key={room.id}
+                href={`/rooms/${room.id}`}
+                className={`flex items-center gap-3 mx-2 px-3 py-2.5 rounded-lg transition-all group ${
+                  isActive
+                    ? "bg-violet-950/70 border border-violet-800/50"
+                    : "hover:bg-zinc-800/60 border border-transparent"
+                }`}
+              >
+                <div
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0 transition-colors ${
+                    isActive
+                      ? "bg-violet-800/70 border border-violet-700/50 text-violet-100"
+                      : "bg-zinc-800 border border-zinc-700/40 text-zinc-400 group-hover:text-zinc-200"
+                  }`}
+                >
+                  {room.name[0].toUpperCase()}
+                </div>
+                <span
+                  className={`text-sm font-medium flex-1 truncate transition-colors ${
+                    isActive ? "text-zinc-100" : "text-zinc-400 group-hover:text-zinc-200"
+                  }`}
+                >
+                  {room.name}
+                </span>
+                {!isActive && (
+                  <UnreadDot roomId={room.id} lastMessageAt={room.lastMessageAt} />
+                )}
+                {isActive && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-violet-400 flex-shrink-0" />
+                )}
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── Center: messages + input ── */}
+      <div className="flex flex-1 flex-col overflow-hidden min-w-0">
+
+        {/* Top bar — always visible, houses room name + invite */}
+        <div className="flex items-center gap-3 px-4 py-3 border-b border-zinc-800/60 flex-shrink-0">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-base font-bold text-zinc-100 truncate">{roomName}</h1>
+            <p className="text-xs text-zinc-500">
               {shapes.length} shape{shapes.length !== 1 ? "s" : ""} · {humans.length} human{humans.length !== 1 ? "s" : ""}
-            </span>
+            </p>
           </div>
           {inviteCode && <InviteButton inviteCode={inviteCode} />}
         </div>
+
+        {/* No shapes banner */}
+        {shapes.length === 0 && (
+          <div className="mx-4 mt-3 rounded-xl border border-dashed border-zinc-700 bg-zinc-900/60 px-4 py-3 flex items-start gap-3 flex-shrink-0">
+            <span className="text-violet-400 mt-0.5">✦</span>
+            <div>
+              <p className="text-sm font-semibold text-zinc-200">No shapes in this room yet</p>
+              <p className="text-xs text-zinc-500 mt-0.5">
+                Add a shape from the panel on the right or{" "}
+                <Link href="/shapes/new" className="text-violet-400 hover:text-violet-300 underline underline-offset-2 transition-colors">
+                  create one
+                </Link>.
+              </p>
+            </div>
+          </div>
+        )}
 
         <MessageList
           messages={messages}
@@ -144,28 +228,17 @@ export function ChatRoom({
           onEdit={handleEdit}
         />
 
-        {shapes.length === 0 && (
-          <div className="mx-4 mb-3 rounded-lg border border-dashed border-zinc-700 bg-zinc-900/60 px-4 py-4 flex items-start gap-3">
-            <span className="text-violet-400 text-lg mt-0.5">✦</span>
-            <div>
-              <p className="text-base font-semibold text-zinc-200">No shapes in this room yet</p>
-              <p className="text-sm text-zinc-500 mt-0.5">
-                Add a shape to start the conversation.{" "}
-                <Link href="/shapes/new" className="text-violet-400 hover:text-violet-300 underline underline-offset-2 transition-colors">
-                  Create one
-                </Link>{" "}
-                or use the panel on the right to add an existing shape.
-              </p>
-            </div>
-          </div>
-        )}
-
         <MessageInput onSend={handleSend} />
       </div>
 
-      <div className="hidden md:block w-52 border-l border-zinc-800/60 overflow-y-auto bg-zinc-950">
+      {/* ── Right sidebar: presence ── */}
+      <div className="hidden md:flex flex-col w-64 flex-shrink-0 border-l border-zinc-800/60 overflow-y-auto">
+        <div className="px-4 pt-4 pb-3 border-b border-zinc-800/40 flex-shrink-0">
+          <p className="text-xs font-semibold uppercase tracking-widest text-zinc-600">Members</p>
+        </div>
         <PresenceList roomId={roomId} shapes={shapes} humans={humans} currentUserId={currentUserId} />
       </div>
+
     </div>
   );
 }

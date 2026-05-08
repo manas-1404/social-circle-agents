@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth";
-import { getRoomWithMembers, getRecentMessages, getShapesInRoom } from "@/lib/db/queries";
+import { getRoomWithMembers, getRecentMessages, getShapesInRoom, getUserRooms } from "@/lib/db/queries";
 import { headers } from "next/headers";
 import { redirect, notFound } from "next/navigation";
 import { ChatRoom } from "@/components/chat/ChatRoom";
@@ -44,6 +44,13 @@ export default async function ChatRoomPage({
 
   const humans = humanUsers.map((u) => ({ id: u.id, display_name: u.name }));
 
+  const allRooms = await getUserRooms(session.user.id);
+  const roomList = allRooms.map(({ room, lastMessageAt }) => ({
+    id: room.id,
+    name: room.name,
+    lastMessageAt: lastMessageAt ? String(lastMessageAt) : null,
+  }));
+
   return (
     <ChatRoom
       roomId={roomId}
@@ -53,6 +60,7 @@ export default async function ChatRoomPage({
       currentUserId={session.user.id}
       shapes={shapes}
       humans={humans}
+      rooms={roomList}
     />
   );
 }

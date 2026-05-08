@@ -43,7 +43,7 @@ export function MessageList({ messages, currentUserId, typers, onLoadMore, onEdi
   }, [messages.length, typers.length]);
 
   return (
-    <div className="flex-1 overflow-y-auto py-4">
+    <div className="flex-1 overflow-y-auto py-4 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-700 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-zinc-600">
       {onLoadMore && (
         <div className="text-center py-2">
           <button

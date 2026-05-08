@@ -37,7 +37,7 @@ export function PresenceList({ roomId, shapes, humans, currentUserId }: Presence
   }
 
   return (
-    <div className="flex flex-col gap-5 p-4">
+    <div className="flex flex-col gap-5 px-4 py-4">
       {/* Humans */}
       <div>
         <p className="text-xs font-semibold uppercase tracking-widest text-zinc-600 mb-3">People</p>
