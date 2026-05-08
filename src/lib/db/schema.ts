@@ -8,6 +8,7 @@ import {
   jsonb,
   real,
   index,
+  uniqueIndex,
   vector,
 } from "drizzle-orm/pg-core";
 import type { PersonaKernel } from "@/lib/persona/schema";
@@ -91,6 +92,8 @@ export const messages = pgTable(
     director_run_id: uuid("director_run_id"),
     tokens_used: integer("tokens_used"),
     created_at: timestamp("created_at").defaultNow(),
+    updated_at: timestamp("updated_at"),
+    is_edited: boolean("is_edited").default(false),
   },
   (t) => [index("messages_room_created_idx").on(t.room_id, t.created_at)]
 );
@@ -138,6 +141,20 @@ export const memories = pgTable(
       t.embedding.op("vector_cosine_ops")
     ),
     index("memories_scope_idx").on(t.shape_id, t.user_id, t.scope),
+  ]
+);
+
+export const user_memories = pgTable(
+  "user_memories",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    shape_id: uuid("shape_id").references(() => shapes.id).notNull(),
+    user_id: text("user_id").references(() => users.id).notNull(),
+    profile: text("profile").notNull(),
+    updated_at: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (t) => [
+    uniqueIndex("user_memories_shape_user_idx").on(t.shape_id, t.user_id),
   ]
 );
 

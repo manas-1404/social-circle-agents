@@ -43,7 +43,7 @@ export function buildDirectorUserMessage(params: {
     .map((s) => {
       const cooldownNote =
         s.lastSpoke === "just now" ? "  ← in cooldown, do not pick" : "";
-      return `${s.slug} (id: ${s.id})
+      return `slug: ${s.slug} | shape_id (use this UUID in output): ${s.id}
   Personality summary: ${s.summary}
   Talkativeness: ${s.talkativeness}
   Last spoke: ${s.lastSpoke}
@@ -70,5 +70,18 @@ ${messageLog}
 ${shapesBlock}
 
 === YOUR DECISION ===
-Output JSON matching the schema. Empty responders + skip_reason is valid.`;
+Output JSON only. Use exactly these field names (snake_case):
+{
+  "responders": [
+    {
+      "shape_id": "<uuid>",
+      "strategy": "<strategy>",
+      "addressing": "<user:{id}|shape:{id}|room>",
+      "intent": "<one sentence describing what this shape should convey>",
+      "delay_ms": <integer>
+    }
+  ],
+  "skip_reason": null
+}
+skip_reason must always be present (null if responding, a short string if skipping).`;
 }

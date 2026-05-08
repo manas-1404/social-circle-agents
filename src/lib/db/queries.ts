@@ -16,6 +16,8 @@ export async function getRecentMessages(roomId: string, limit = 20) {
       director_run_id: messages.director_run_id,
       tokens_used: messages.tokens_used,
       created_at: messages.created_at,
+      updated_at: messages.updated_at,
+      is_edited: messages.is_edited,
       sender_display_name: sql<string>`COALESCE(${shapes.display_name}, ${users.name})`,
       sender_avatar: shapes.avatar_url,
     })

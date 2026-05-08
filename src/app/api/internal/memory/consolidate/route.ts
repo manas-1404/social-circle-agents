@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { consolidateMemories } from "@/lib/ai/memory";
-import { embedTexts } from "@/lib/ai/embeddings";
 import { db } from "@/lib/db";
-import { memories, shapes, users, messages } from "@/lib/db/schema";
+import { user_memories, shapes, users, messages } from "@/lib/db/schema";
 import { eq, and, desc } from "drizzle-orm";
 
 function requireInternalSecret(req: NextRequest): boolean {
@@ -20,13 +19,12 @@ export async function POST(req: NextRequest) {
   const user = await db.query.users.findFirst({ where: eq(users.id, userId) });
   if (!shape || !user) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  // Get session messages
   const sessionMessages = await db
     .select()
     .from(messages)
     .where(eq(messages.room_id, roomId))
     .orderBy(desc(messages.created_at))
-    .limit(100);
+    .limit(10);
 
   const conversation = sessionMessages
     .reverse()
@@ -37,43 +35,28 @@ export async function POST(req: NextRequest) {
     )
     .join("\n");
 
-  // Get existing memories to avoid duplication
-  const existingMemories = await db
-    .select()
-    .from(memories)
-    .where(and(eq(memories.shape_id, shapeId), eq(memories.user_id, userId)))
-    .orderBy(desc(memories.created_at))
-    .limit(20);
+  const existing = await db.query.user_memories.findFirst({
+    where: and(eq(user_memories.shape_id, shapeId), eq(user_memories.user_id, userId)),
+  });
 
   const result = await consolidateMemories({
     shapeName: shape.persona_kernel.identity.display_name,
     userName: user.display_name ?? user.name,
     conversation,
-    existingMemories: existingMemories.map((m) => m.content),
+    existingProfile: existing?.profile ?? null,
   });
 
-  if (result.memories.length === 0) {
-    return NextResponse.json({ created: 0 });
+  if (!result.should_update || !result.profile) {
+    return NextResponse.json({ updated: false });
   }
 
-  // Embed new memories
-  const embeddings = await embedTexts(result.memories.map((m) => m.content));
+  await db
+    .insert(user_memories)
+    .values({ shape_id: shapeId, user_id: userId, profile: result.profile, updated_at: new Date() })
+    .onConflictDoUpdate({
+      target: [user_memories.shape_id, user_memories.user_id],
+      set: { profile: result.profile, updated_at: new Date() },
+    });
 
-  const created = await db
-    .insert(memories)
-    .values(
-      result.memories.map((m, i) => ({
-        shape_id: shapeId,
-        user_id: userId,
-        room_id: roomId,
-        scope: "private",
-        type: m.type,
-        content: m.content,
-        metadata: { salience: m.salience },
-        embedding: embeddings[i],
-      }))
-    )
-    .returning();
-
-  return NextResponse.json({ created: created.length });
+  return NextResponse.json({ updated: true });
 }

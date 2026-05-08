@@ -2,24 +2,19 @@ export function buildMemoryConsolidationPrompt(params: {
   shapeName: string;
   userName: string;
   conversation: string;
-  existingMemories: string[];
+  existingProfile: string | null;
 }): string {
-  return `You are creating a structured memory summary for ${params.shapeName} from a conversation with ${params.userName}.
+  return `You maintain a personal profile about ${params.userName} for ${params.shapeName}.
 
-CONVERSATION:
+EXISTING PROFILE:
+${params.existingProfile ?? "(no profile yet)"}
+
+RECENT CONVERSATION (last 10 messages):
 ${params.conversation}
 
-EXISTING MEMORIES (do not duplicate):
-${params.existingMemories.join("\n") || "(none yet)"}
+Decide: does this conversation contain anything new and meaningful about ${params.userName} that is not already captured in the profile? New relationships, life events, strong opinions, recurring themes, personal context.
 
-Generate up to 5 NEW memories. Each is one of:
-- episodic: a specific moment ("On [date], [user] said [quote] when we were talking about [topic]")
-- semantic: a fact about the user ("[user]'s cat is named Benji" / "[user] works as a software engineer")
+If YES: rewrite the full profile as a concise collection of facts about ${params.userName}. Free-text, no structure required. Write only facts about the user — never include ${params.shapeName}'s name, reactions, or opinions. Keep it dense and specific. Return should_update: true and the full updated profile text.
 
-Rules:
-- Skip generic information already obvious from the persona.
-- Prefer specifics over generalities. Include exact quotes for episodic memories.
-- Do not extract sensitive info (medical, financial, government IDs, passwords) unless directly relevant.
-- Do not record information about THIRD parties without explicit relevance.
-- salience is a number from 0.0 to 1.0 indicating how often this should resurface.`;
+If NO: return should_update: false and profile: null. Do not update for small talk, greetings, or anything already captured in the profile.`;
 }

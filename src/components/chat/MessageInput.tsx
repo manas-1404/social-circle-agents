@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, type KeyboardEvent } from "react";
+import { containsProfanity, PROFANITY_ERROR } from "@/lib/profanity-filter";
 
 type MessageInputProps = {
   onSend: (content: string) => Promise<void>;
@@ -10,11 +11,19 @@ type MessageInputProps = {
 export function MessageInput({ onSend, disabled }: MessageInputProps) {
   const [value, setValue] = useState("");
   const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   async function handleSend() {
     const content = value.trim();
     if (!content || sending) return;
+
+    if (containsProfanity(content)) {
+      setError(PROFANITY_ERROR);
+      return;
+    }
+
+    setError(null);
     setSending(true);
     try {
       await onSend(content);
@@ -36,11 +45,11 @@ export function MessageInput({ onSend, disabled }: MessageInputProps) {
 
   return (
     <div className="px-4 py-3 bg-zinc-950 border-t border-zinc-800/60">
-      <div className="flex items-end gap-2 bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 focus-within:border-zinc-600 transition-colors">
+      <div className={`flex items-end gap-2 bg-zinc-900 border rounded-xl px-3 py-2 focus-within:border-zinc-600 transition-colors ${error ? "border-red-500/60" : "border-zinc-800"}`}>
         <textarea
           ref={textareaRef}
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(e) => { setValue(e.target.value); if (error) setError(null); }}
           onKeyDown={handleKeyDown}
           placeholder="Message…"
           disabled={disabled || sending}
@@ -68,8 +77,11 @@ export function MessageInput({ onSend, disabled }: MessageInputProps) {
           )}
         </button>
       </div>
-      <p className="text-xs text-zinc-600 mt-1.5 ml-1">Enter to send · Shift+Enter for newline</p>
+      {error ? (
+        <p className="text-xs text-red-400 mt-1.5 ml-1">{error}</p>
+      ) : (
+        <p className="text-xs text-zinc-600 mt-1.5 ml-1">Enter to send · Shift+Enter for newline</p>
+      )}
     </div>
   );
 }
-

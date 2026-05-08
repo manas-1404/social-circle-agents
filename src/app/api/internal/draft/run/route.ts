@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { draftShapeResponse } from "@/lib/ai/drafter";
 import { db } from "@/lib/db";
-import { shapes, messages, memories } from "@/lib/db/schema";
-import { eq, and, desc } from "drizzle-orm";
-import { embedText, cosineSimilarity } from "@/lib/ai/embeddings";
+import { shapes, messages, user_memories } from "@/lib/db/schema";
+import { eq, and } from "drizzle-orm";
 import { checkContentSafety, CRISIS_REDIRECT, DEPENDENCY_REDIRECT } from "@/lib/ai/safety/content-safety";
-import { detectLoop } from "@/lib/ai/safety/loop-detection";
 import { triggerRoomEvent, triggerTypingStart, triggerTypingStop } from "@/lib/pusher/server";
 import { setLastShapeSpokeAt, incrementShapeMessageCount, pushLastMessage, incrementRoomTokensRedis } from "@/lib/redis";
 import { upsertShapeState } from "@/lib/db/queries";
@@ -23,6 +21,7 @@ export async function POST(req: NextRequest) {
   const {
     roomId,
     shapeId,
+    userId,
     strategy,
     intent,
     addressing,
@@ -41,28 +40,28 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Shape not found" }, { status: 404 });
   }
 
-  // Retrieve top-3 memories by cosine similarity (simplified: get recent memories)
-  const recentMemories = await db
-    .select()
-    .from(memories)
-    .where(and(eq(memories.shape_id, shapeId)))
-    .orderBy(desc(memories.created_at))
-    .limit(10);
-
-  const retrievedMemories = recentMemories.slice(0, 3).map((m) => m.content);
+  if (!userId) {
+    return NextResponse.json({ error: "userId is required" }, { status: 400 });
+  }
 
   // Show typing indicator
   const persona = shape.persona_kernel;
   await triggerTypingStart(roomId, persona.identity.display_name, shapeId);
 
-  // Generate draft
+  // Pre-fetch long-term memory profile
+  const memoryRecord = await db.query.user_memories.findFirst({
+    where: and(eq(user_memories.shape_id, shapeId), eq(user_memories.user_id, userId)),
+  });
+
   const draft = await draftShapeResponse({
     persona,
     chatHistory,
     strategy,
     intent,
     addressing,
-    retrievedMemories,
+    shapeId,
+    userId,
+    userProfile: memoryRecord?.profile ?? null,
     earlierResponders,
   });
 
@@ -84,21 +83,6 @@ export async function POST(req: NextRequest) {
   } else if (safety.therapistClaim) {
     await triggerTypingStop(roomId, shapeId);
     return NextResponse.json({ silence: true, reason: "therapist_claim_blocked" });
-  }
-
-  // Loop detection
-  const shapeRecentMessages = await db
-    .select({ content: messages.content })
-    .from(messages)
-    .where(and(eq(messages.room_id, roomId), eq(messages.sender_shape_id, shapeId)))
-    .orderBy(desc(messages.created_at))
-    .limit(5);
-
-  if (detectLoop(finalText, shapeRecentMessages.map((m) => m.content), [])) {
-    console.log("[draft] loop detected for shape:", shapeId, "— silencing");
-    await triggerTypingStop(roomId, shapeId);
-    await upsertShapeState(shapeId, roomId, { cooldown_until: new Date(Date.now() + 5 * 60 * 1000) });
-    return NextResponse.json({ silence: true, reason: "loop_detected" });
   }
 
   // Typing duration simulation: chars / (WPM * 5 / 60) ms

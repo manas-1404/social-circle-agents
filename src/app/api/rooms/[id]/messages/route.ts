@@ -7,6 +7,7 @@ import { pushRoomEvent, pushLastMessage } from "@/lib/redis";
 import { inngest, EVENTS } from "@/lib/inngest/client";
 import { eq, and, desc, lt, sql } from "drizzle-orm";
 import { headers } from "next/headers";
+import { containsProfanity } from "@/lib/profanity-filter";
 
 export async function GET(
   req: NextRequest,
@@ -36,6 +37,8 @@ export async function GET(
       director_run_id: messages.director_run_id,
       tokens_used: messages.tokens_used,
       created_at: messages.created_at,
+      updated_at: messages.updated_at,
+      is_edited: messages.is_edited,
       sender_display_name: sql<string>`COALESCE(${shapes.display_name}, ${users.name})`,
       sender_avatar: shapes.avatar_url,
     })
@@ -70,6 +73,9 @@ export async function POST(
   const body = await req.json();
   const { content } = body;
   if (!content?.trim()) return NextResponse.json({ error: "content required" }, { status: 400 });
+  if (containsProfanity(content.trim())) {
+    return NextResponse.json({ error: "Message contains disallowed content" }, { status: 422 });
+  }
 
   const [message] = await db
     .insert(messages)

@@ -1,5 +1,5 @@
 import { generateText } from "ai";
-import { gateway } from "./gateway";
+import { getLLM } from "./providers";
 import { renderPersonaSystemPrompt, renderPersonaUserMessage } from "@/lib/persona/render";
 import type { PersonaKernel } from "@/lib/persona/schema";
 import { withRetry } from "./retry";
@@ -10,7 +10,9 @@ export type DraftParams = {
   strategy: string;
   intent: string;
   addressing: string;
-  retrievedMemories: string[];
+  shapeId: string;
+  userId: string;
+  userProfile?: string | null;
   earlierResponders: { shapeName: string; text: string }[];
 };
 
@@ -21,21 +23,27 @@ export type DraftResult = {
 };
 
 export async function draftShapeResponse(params: DraftParams): Promise<DraftResult> {
-  const system = renderPersonaSystemPrompt(
+  const baseSystem = renderPersonaSystemPrompt(
     params.persona,
-    params.retrievedMemories,
     params.strategy,
     params.intent,
     params.addressing
   );
+
+  const system = params.userProfile
+    ? `${baseSystem}\n\n# What you know about this person\n${params.userProfile}`
+    : baseSystem;
+
   const userMessage = renderPersonaUserMessage(
     params.chatHistory,
     params.earlierResponders
   );
 
+  console.log("[draft] drafting for shape:", params.shapeId, "user:", params.userId, "hasProfile:", !!params.userProfile);
+
   const { text, usage } = await withRetry(() =>
     generateText({
-      model: gateway("anthropic/claude-sonnet-4-6"),
+      model: getLLM(),
       system,
       prompt: userMessage,
       maxOutputTokens: 200,
