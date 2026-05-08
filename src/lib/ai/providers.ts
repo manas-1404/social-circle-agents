@@ -13,9 +13,14 @@ const bedrockProvider = createAmazonBedrock({
 
 // US geo cross-region inference ID — required for Llama 4 Scout (not available as in-region)
 export const DEFAULT_LLM_MODEL_ID = "us.meta.llama4-scout-17b-instruct-v1:0";
+export const DIRECTOR_LLM_MODEL_ID = "us.anthropic.claude-haiku-4-5-20251001-v1:0";
 
 export function getLLM(modelId: string = DEFAULT_LLM_MODEL_ID) {
   return bedrockProvider(modelId);
+}
+
+export function getDirectorLLM() {
+  return bedrockProvider(DIRECTOR_LLM_MODEL_ID);
 }
 
 // Embedding provider — Vercel AI Gateway (OpenAI text-embedding-3-small)
@@ -29,13 +34,14 @@ export async function generateJson<T>(params: {
   system?: string;
   prompt: string;
   schema: z.ZodType<T>;
+  model?: ReturnType<typeof getLLM>;
 }): Promise<{ object: T; usage: { totalTokens: number } }> {
   // Embed the exact JSON schema so the model knows the required field names and types.
   const jsonSchema = JSON.stringify(z.toJSONSchema(params.schema), null, 2);
   const jsonInstruction = `\n\nYou MUST respond with a single raw JSON object that strictly conforms to this JSON Schema. No markdown, no code fences, no explanation — only the JSON object.\n\nSchema:\n${jsonSchema}`;
 
   const { text, usage } = await generateText({
-    model: getLLM(),
+    model: params.model ?? getLLM(),
     system: params.system ? params.system + jsonInstruction : jsonInstruction.trim(),
     prompt: params.prompt,
   });

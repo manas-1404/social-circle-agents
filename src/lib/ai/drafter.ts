@@ -1,12 +1,8 @@
-import { generateText, tool, stepCountIs } from "ai";
-import { z } from "zod";
+import { generateText } from "ai";
 import { getLLM } from "./providers";
 import { renderPersonaSystemPrompt, renderPersonaUserMessage } from "@/lib/persona/render";
 import type { PersonaKernel } from "@/lib/persona/schema";
 import { withRetry } from "./retry";
-import { db } from "@/lib/db";
-import { user_memories } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
 
 export type DraftParams = {
   persona: PersonaKernel;
@@ -16,6 +12,7 @@ export type DraftParams = {
   addressing: string;
   shapeId: string;
   userId: string;
+  userProfile?: string | null;
   earlierResponders: { shapeName: string; text: string }[];
 };
 
@@ -26,42 +23,23 @@ export type DraftResult = {
 };
 
 export async function draftShapeResponse(params: DraftParams): Promise<DraftResult> {
-  const system = renderPersonaSystemPrompt(
+  const baseSystem = renderPersonaSystemPrompt(
     params.persona,
     params.strategy,
     params.intent,
     params.addressing
   );
+
+  const system = params.userProfile
+    ? `${baseSystem}\n\n# What you know about this person\n${params.userProfile}`
+    : baseSystem;
+
   const userMessage = renderPersonaUserMessage(
     params.chatHistory,
     params.earlierResponders
   );
 
-  const tools = {
-    get_user_profile: tool({
-      description:
-        "Retrieve your long-term memory about this person. Call this when the user references their past, personal context, relationships, or ongoing topics that may not be in the current chat history.",
-      inputSchema: z.object({}),
-      execute: async (): Promise<{ profile: string | null }> => {
-        console.log("[get_user_profile] called for shape:", params.shapeId, "user:", params.userId);
-        try {
-          const record = await db.query.user_memories.findFirst({
-            where: and(
-              eq(user_memories.shape_id, params.shapeId),
-              eq(user_memories.user_id, params.userId)
-            ),
-          });
-          console.log("[get_user_profile] profile found:", !!record?.profile);
-          return { profile: record?.profile ?? null };
-        } catch (err) {
-          console.log("[get_user_profile] error for shape:", params.shapeId, err);
-          return { profile: null };
-        }
-      },
-    }),
-  };
-
-  console.log("[draft] get_user_profile tool active for shape:", params.shapeId, "user:", params.userId);
+  console.log("[draft] drafting for shape:", params.shapeId, "user:", params.userId, "hasProfile:", !!params.userProfile);
 
   const { text, usage } = await withRetry(() =>
     generateText({
@@ -69,8 +47,6 @@ export async function draftShapeResponse(params: DraftParams): Promise<DraftResu
       system,
       prompt: userMessage,
       maxOutputTokens: 200,
-      tools,
-      stopWhen: stepCountIs(2),
     })
   );
 

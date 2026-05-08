@@ -1,4 +1,4 @@
-import { generateJson } from "./providers";
+import { generateJson, getDirectorLLM } from "./providers";
 import { directorOutputSchema, type DirectorOutput } from "./schemas/director";
 import { DIRECTOR_SYSTEM_PROMPT, buildDirectorUserMessage } from "./prompts/director";
 import { withRetry } from "./retry";
@@ -19,6 +19,7 @@ export async function runDirector(params: DirectorParams): Promise<{
         schema: directorOutputSchema,
         system: DIRECTOR_SYSTEM_PROMPT,
         prompt: userMessage,
+        model: getDirectorLLM(),
       })
     );
 
