@@ -40,6 +40,7 @@ export function ChatRoom({
   const [typers, setTypers] = useState<TypingShape[]>([]);
   const [shapes, setShapes] = useState<ShapeMember[]>(initialShapes);
   const [humans, setHumans] = useState<HumanMember[]>(initialHumans);
+  const [hasMore, setHasMore] = useState(initialMessages.length >= 25);
 
   useEffect(() => {
     localStorage.setItem(`room_visited_${roomId}`, new Date().toISOString());
@@ -123,8 +124,9 @@ export function ChatRoom({
       `/api/rooms/${roomId}/messages?before=${oldest.created_at?.toISOString()}`
     );
     if (!res.ok) return;
-    const older = await res.json();
-    setMessages((prev) => [...older, ...prev]);
+    const older: typeof messages = await res.json();
+    if (older.length < 25) setHasMore(false);
+    if (older.length > 0) setMessages((prev) => [...older, ...prev]);
   }, [messages, roomId]);
 
   return (
@@ -224,7 +226,7 @@ export function ChatRoom({
           messages={messages}
           currentUserId={currentUserId}
           typers={typers}
-          onLoadMore={messages.length >= 50 ? handleLoadMore : undefined}
+          onLoadMore={hasMore ? handleLoadMore : undefined}
           onEdit={handleEdit}
         />
 

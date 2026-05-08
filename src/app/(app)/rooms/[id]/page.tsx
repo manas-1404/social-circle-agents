@@ -25,7 +25,7 @@ export default async function ChatRoomPage({
   const data = await getRoomWithMembers(roomId);
   if (!data) notFound();
 
-  const initialMessages = await getRecentMessages(roomId, 50);
+  const initialMessages = await getRecentMessages(roomId, 25);
   const shapesInRoom = await getShapesInRoom(roomId);
 
   const shapes = shapesInRoom.map(({ shape }) => ({

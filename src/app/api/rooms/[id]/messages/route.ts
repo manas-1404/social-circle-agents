@@ -51,7 +51,7 @@ export async function GET(
         : eq(messages.room_id, id)
     )
     .orderBy(desc(messages.created_at))
-    .limit(50);
+    .limit(25);
 
   return NextResponse.json(rows.reverse());
 }
