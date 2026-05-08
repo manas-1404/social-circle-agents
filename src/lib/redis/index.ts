@@ -61,6 +61,15 @@ export async function resetRoomUserMessageCount(roomId: string, userId: string):
   await redis.set(`room:${roomId}:user:${userId}:msg_count_since_consolidation`, 0);
 }
 
+export async function cleanupRoomRedisKeys(roomId: string) {
+  await Promise.allSettled([
+    redis.del(`stream:room:${roomId}`),
+    redis.del(`room:${roomId}:last_messages`),
+    redis.del(`room:${roomId}:last_shape_spoke_at`),
+    redis.del(`room:${roomId}:tokens_today`),
+  ]);
+}
+
 export async function incrementRoomTokensRedis(roomId: string, tokens: number) {
   const key = `room:${roomId}:tokens_today`;
   await redis.incrby(key, tokens);

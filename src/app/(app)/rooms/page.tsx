@@ -6,6 +6,7 @@ import Link from "next/link";
 import { CreateRoomButton } from "@/components/CreateRoomButton";
 import { HowItWorks } from "@/components/HowItWorks";
 import { UnreadDot } from "@/components/UnreadDot";
+import { DeleteRoomButton } from "@/components/DeleteRoomButton";
 
 function formatTimeAgo(date: Date): string {
   const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
@@ -47,11 +48,12 @@ export default async function RoomsPage() {
           {userRooms.map(({ room, lastMessageAt }) => {
             const lastAt = lastMessageAt ? new Date(lastMessageAt) : null;
             const timeAgo = lastAt ? formatTimeAgo(lastAt) : null;
+            const isOwner = room.owner_id === session.user.id;
             return (
-              <li key={room.id}>
+              <li key={room.id} className="flex items-center gap-1 group/row">
                 <Link
                   href={`/rooms/${room.id}`}
-                  className="group flex items-center justify-between px-4 py-4 rounded-lg bg-zinc-900 hover:bg-zinc-800 transition-colors border border-zinc-800 hover:border-zinc-600"
+                  className="flex-1 group flex items-center justify-between px-4 py-4 rounded-lg bg-zinc-900 hover:bg-zinc-800 transition-colors border border-zinc-800 hover:border-zinc-600"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-zinc-800 group-hover:bg-zinc-700 transition-colors flex items-center justify-center text-base font-bold text-zinc-300 flex-shrink-0">
@@ -71,6 +73,7 @@ export default async function RoomsPage() {
                     <path d="M9 18l6-6-6-6" />
                   </svg>
                 </Link>
+                {isOwner && <DeleteRoomButton roomId={room.id} />}
               </li>
             );
           })}
