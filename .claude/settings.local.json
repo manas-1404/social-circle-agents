@@ -14,7 +14,8 @@
       "WebFetch(domain:www.inngest.com)",
       "WebFetch(domain:neon.tech)",
       "WebFetch(domain:neon.com)",
-      "WebFetch(domain:www.llama.com)"
+      "WebFetch(domain:www.llama.com)",
+      "WebFetch(domain:neonstatus.com)"
     ]
   }
 }

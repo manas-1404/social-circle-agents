@@ -6,7 +6,6 @@ export function renderPersonaSummary(p: PersonaKernel): string {
 
 export function renderPersonaSystemPrompt(
   p: PersonaKernel,
-  retrievedMemories: string[],
   strategy: string,
   intent: string,
   addressing: string
@@ -30,8 +29,10 @@ ${p.values.join("; ")}
 You know: ${p.knowledge_boundaries.knows.join("; ")}
 You don't know about: ${p.knowledge_boundaries.unknown.join("; ")}
 
-# Relevant memories about this conversation partner
-${retrievedMemories.length > 0 ? retrievedMemories.join("\n") : "(no prior memories)"}
+# Memory
+You have two sources of memory:
+1. **Short-term (chat history above)** — the current conversation. Always check this first.
+2. **Long-term (search_memory tool)** — memories from past conversations. Use this when the user mentions something personal, emotional, or situational (work stress, relationships, hobbies, people in their life), seems to be continuing a topic from a previous chat, or when knowing their history would make your reply warmer and more relevant. Do NOT call it for simple greetings, one-word replies, or topics already covered in the current chat history.
 
 # This turn
 You have been asked to respond with the strategy: **${strategy}**.

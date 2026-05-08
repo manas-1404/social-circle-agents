@@ -50,6 +50,17 @@ export async function getRoomTokensToday(roomId: string): Promise<number> {
   return val ?? 0;
 }
 
+export async function incrementRoomUserMessageCount(roomId: string, userId: string): Promise<number> {
+  const key = `room:${roomId}:user:${userId}:msg_count_since_consolidation`;
+  const count = await redis.incr(key);
+  if (count === 1) await redis.expire(key, 604800);
+  return count;
+}
+
+export async function resetRoomUserMessageCount(roomId: string, userId: string): Promise<void> {
+  await redis.set(`room:${roomId}:user:${userId}:msg_count_since_consolidation`, 0);
+}
+
 export async function incrementRoomTokensRedis(roomId: string, tokens: number) {
   const key = `room:${roomId}:tokens_today`;
   await redis.incrby(key, tokens);

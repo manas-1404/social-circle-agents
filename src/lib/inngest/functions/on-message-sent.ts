@@ -6,6 +6,7 @@ import { eq, and, isNotNull } from "drizzle-orm";
 import { getRecentMessages, getShapesInRoom } from "@/lib/db/queries";
 import { echoChambertCheck } from "@/lib/ai/safety/echo-chamber";
 import type { DirectorOutput } from "@/lib/ai/schemas/director";
+import { incrementRoomUserMessageCount } from "@/lib/redis";
 
 const INTERNAL_SECRET = process.env.INTERNAL_API_SECRET ?? "dev-internal-secret-123";
 const BASE_URL = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
@@ -127,6 +128,7 @@ export const onMessageSent = inngest.createFunction(
         callInternal("/api/internal/draft/run", {
           roomId,
           shapeId: responder.shape_id,
+          userId: senderId,
           strategy: responder.strategy,
           intent: responder.intent,
           addressing: responder.addressing,
@@ -160,10 +162,13 @@ export const onMessageSent = inngest.createFunction(
       callInternal("/api/internal/timer/idle", { roomId, elapsed: "30s" })
     );
 
-    // Consolidate memories for each human in the room after conversation
-    await step.run("consolidate-memories", async () =>
-      callInternal("/api/internal/memory/consolidate-room", { roomId, senderId })
-    );
+    await step.run("consolidate-memories", async () => {
+      const count = await incrementRoomUserMessageCount(roomId, senderId);
+      if (count >= 10) {
+        return callInternal("/api/internal/memory/consolidate-room", { roomId, senderId });
+      }
+      return { skipped: true, count };
+    });
 
     return { processed: true, responders: directorOutput.responders.length };
   }

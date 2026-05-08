@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { draftShapeResponse } from "@/lib/ai/drafter";
 import { db } from "@/lib/db";
-import { shapes, messages, memories } from "@/lib/db/schema";
+import { shapes, messages } from "@/lib/db/schema";
 import { eq, and, desc } from "drizzle-orm";
-import { embedText, cosineSimilarity } from "@/lib/ai/embeddings";
 import { checkContentSafety, CRISIS_REDIRECT, DEPENDENCY_REDIRECT } from "@/lib/ai/safety/content-safety";
 import { detectLoop } from "@/lib/ai/safety/loop-detection";
 import { triggerRoomEvent, triggerTypingStart, triggerTypingStop } from "@/lib/pusher/server";
@@ -23,6 +22,7 @@ export async function POST(req: NextRequest) {
   const {
     roomId,
     shapeId,
+    userId,
     strategy,
     intent,
     addressing,
@@ -41,28 +41,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Shape not found" }, { status: 404 });
   }
 
-  // Retrieve top-3 memories by cosine similarity (simplified: get recent memories)
-  const recentMemories = await db
-    .select()
-    .from(memories)
-    .where(and(eq(memories.shape_id, shapeId)))
-    .orderBy(desc(memories.created_at))
-    .limit(10);
-
-  const retrievedMemories = recentMemories.slice(0, 3).map((m) => m.content);
+  if (!userId) {
+    return NextResponse.json({ error: "userId is required" }, { status: 400 });
+  }
 
   // Show typing indicator
   const persona = shape.persona_kernel;
   await triggerTypingStart(roomId, persona.identity.display_name, shapeId);
 
-  // Generate draft
+  // Generate draft — shape self-directs memory retrieval via search_memory tool
   const draft = await draftShapeResponse({
     persona,
     chatHistory,
     strategy,
     intent,
     addressing,
-    retrievedMemories,
+    shapeId,
+    userId,
     earlierResponders,
   });
 

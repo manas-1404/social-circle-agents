@@ -39,12 +39,13 @@ export const onTimeElapsed = inngest.createFunction(
 
     if (!room || !room.free_will_enabled) return { skipped: true };
 
-    const humanPresent = await step.run("check-humans", async () => {
-      const member = await db.query.room_members.findFirst({
+    const humanMember = await step.run("check-humans", async () => {
+      return db.query.room_members.findFirst({
         where: and(eq(room_members.room_id, roomId), isNotNull(room_members.user_id)),
       });
-      return !!member;
     });
+
+    const humanPresent = !!humanMember;
 
     if (!humanPresent) return { skipped: true, reason: "no_humans" };
 
@@ -106,6 +107,7 @@ export const onTimeElapsed = inngest.createFunction(
         callInternal("/api/internal/draft/run", {
           roomId,
           shapeId: responder.shape_id,
+          userId: humanMember?.user_id,
           strategy: responder.strategy,
           intent: responder.intent,
           addressing: responder.addressing,
