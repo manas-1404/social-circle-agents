@@ -1,70 +1,31 @@
 import Link from "next/link";
 
-const features = [
-  {
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-      </svg>
-    ),
-    title: "Design their personality",
-    body: "Name them. Give them quirks, a speaking style, opinions. Shape how they think and when they choose to jump into a conversation.",
-  },
-  {
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-      </svg>
-    ),
-    title: "Real group dynamics",
-    body: "Shapes don't wait to be queried. They read the room, decide when they have something worth saying, and speak to whoever they want.",
-  },
-  {
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
-        <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44L7 20" /><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44" />
-      </svg>
-    ),
-    title: "They remember you",
-    body: "Tell a shape something once. It builds a memory of who you are — your name, your stories, your preferences — and carries it into every future conversation.",
-  },
-  {
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
-        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline points="16 6 12 2 8 6" /><line x1="12" y1="2" x2="12" y2="15" />
-      </svg>
-    ),
-    title: "Invite your friends",
-    body: "Share a link. Your friends step into the same room — same shapes, same history, real-time. Everyone chatting together at once.",
-  },
-];
-
 const demoMessages = [
   { id: 1, type: "human", name: "you", content: "Morning! Anyone have plans for the weekend?" },
-  { id: 2, type: "shape", name: "Luna", color: "violet", content: "I was just thinking about you! Didn't you mention last week that you wanted to try hiking? ✨", delay: "0.1s" },
-  { id: 3, type: "shape", name: "Rex", color: "blue", content: "Weekend plans are overrated. Just go where the day takes you.", delay: "0.3s" },
-  { id: 4, type: "human", name: "you", content: "Luna you remembered!! Yes I was thinking about that trail we talked about" },
-  { id: 5, type: "shape", name: "Muse", color: "fuchsia", content: "Oh the one near the lake? Take your camera — the light there around 7am is *chef's kiss* 📸", delay: "0.2s" },
-  { id: 6, type: "shape", name: "Luna", color: "violet", content: "Go. Seriously. You always feel better after you spend time outside 🌿", delay: "0.1s" },
+  { id: 2, type: "shape", name: "Luna", color: "violet", content: "Didn't you mention wanting to try hiking last week? ✨" },
+  { id: 3, type: "shape", name: "Rex", color: "blue", content: "Weekend plans are overrated. Just go where the day takes you." },
+  { id: 4, type: "human", name: "you", content: "Luna you remembered!! Yes I was thinking about that trail" },
+  { id: 5, type: "shape", name: "Muse", color: "fuchsia", content: "The one near the lake? Go at 7am — the light there is insane 📸" },
+  { id: 6, type: "shape", name: "Luna", color: "violet", content: "You always feel better after time outside. Go 🌿" },
 ];
 
 const steps = [
   {
     num: "01",
     title: "Build a Shape",
-    desc: "Choose a name, write a backstory, define how they speak. Dial in their personality traits and when they like to chime in.",
+    desc: "Name them, write a backstory, set how they speak. They're yours.",
     color: "violet",
   },
   {
     num: "02",
     title: "Chat Together",
-    desc: "Drop into a room. Your shapes read the conversation and respond when they have something genuine to add. No prompts needed.",
+    desc: "Drop into a room. Shapes read the conversation and jump in when they have something to say.",
     color: "fuchsia",
   },
   {
     num: "03",
     title: "Grow Together",
-    desc: "Shapes build a memory profile for you over time. The more you talk, the more they feel like people who actually know you.",
+    desc: "The more you talk, the more they feel like someone who actually knows you.",
     color: "pink",
   },
 ];
@@ -103,21 +64,15 @@ export default function LandingPage() {
 
       {/* ── HERO ── */}
       <section className="relative min-h-screen flex flex-col items-center justify-center pt-20 pb-16 px-6 overflow-hidden">
-
-        {/* Background dot grid */}
         <div className="absolute inset-0 dot-grid opacity-30" />
-
-        {/* Glow orbs */}
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-violet-700/10 blur-[120px] animate-glow-pulse pointer-events-none" />
         <div className="absolute top-1/2 left-1/4 w-[300px] h-[300px] rounded-full bg-fuchsia-700/8 blur-[80px] pointer-events-none" />
 
-        {/* Pill badge */}
         <div className="relative mb-6 flex items-center gap-2 px-3 py-1.5 rounded-full border border-violet-800/60 bg-violet-950/40 text-xs text-violet-300 font-medium animate-fade-up">
           <span className="w-1.5 h-1.5 rounded-full bg-violet-400 inline-block animate-pulse" />
           AI companions with actual free will
         </div>
 
-        {/* Headline */}
         <h1 className="relative text-center font-black tracking-tighter leading-[0.95] mb-6 animate-fade-up" style={{ animationDelay: "0.1s", fontSize: "clamp(3rem, 8vw, 6.5rem)" }}>
           Meet your{" "}
           <span className="gradient-text">shapes.</span>
@@ -125,13 +80,11 @@ export default function LandingPage() {
           <span className="text-zinc-200">They have something to say.</span>
         </h1>
 
-        {/* Subtitle */}
-        <p className="relative text-center text-zinc-400 max-w-xl mb-10 leading-relaxed animate-fade-up" style={{ animationDelay: "0.2s", fontSize: "clamp(1rem, 2vw, 1.2rem)" }}>
-          Create AI agents with unique personalities, real opinions, and long-term memory.
-          Drop them in a chat room. Talk with them like people. Invite your actual friends to join.
+        <p className="relative text-center text-zinc-400 max-w-lg mb-10 leading-relaxed animate-fade-up text-base md:text-lg" style={{ animationDelay: "0.2s" }}>
+          Create AI agents with unique personalities and memory. Chat with them like people.
+          Invite friends to join.
         </p>
 
-        {/* CTAs */}
         <div className="relative flex flex-wrap items-center justify-center gap-3 mb-20 animate-fade-up" style={{ animationDelay: "0.3s" }}>
           <Link
             href="/sign-up"
@@ -144,36 +97,29 @@ export default function LandingPage() {
           </Link>
           <Link
             href="/sign-in"
-            className="flex items-center gap-2 text-zinc-400 hover:text-zinc-100 font-medium px-6 py-3 rounded-xl text-sm border border-zinc-800 hover:border-zinc-700 transition-all hover:bg-zinc-900"
+            className="text-zinc-400 hover:text-zinc-100 font-medium px-6 py-3 rounded-xl text-sm border border-zinc-800 hover:border-zinc-700 transition-all hover:bg-zinc-900"
           >
             Sign in
           </Link>
         </div>
 
-        {/* Floating shape avatars + mini chat preview */}
+        {/* Floating cards + chat preview */}
         <div className="relative w-full max-w-4xl mx-auto animate-fade-up" style={{ animationDelay: "0.4s" }}>
-
-          {/* Floating shape cards — left */}
-          <div className="absolute -left-4 top-8 z-10 animate-float hidden md:block" style={{ animationDelay: "0s" }}>
+          <div className="absolute -left-4 top-8 z-10 animate-float hidden md:block">
             <ShapeCard name="Luna" traits={["curious", "poetic"]} color="violet" />
           </div>
-
-          <div className="absolute -left-8 bottom-16 z-10 animate-float-slow hidden md:block" style={{ animationDelay: "0.8s" }}>
+          <div className="absolute -left-8 bottom-16 z-10 animate-float-slow hidden md:block">
             <ShapeCard name="Rex" traits={["bold", "direct"]} color="blue" />
           </div>
-
-          {/* Floating shape cards — right */}
-          <div className="absolute -right-4 top-4 z-10 animate-float-delayed hidden md:block" style={{ animationDelay: "0.4s" }}>
+          <div className="absolute -right-4 top-4 z-10 animate-float-delayed hidden md:block">
             <ShapeCard name="Muse" traits={["creative", "warm"]} color="fuchsia" />
           </div>
-
           <div className="absolute -right-6 bottom-20 z-10 animate-float hidden md:block" style={{ animationDelay: "1.2s" }}>
             <ShapeCard name="Echo" traits={["witty", "calm"]} color="emerald" />
           </div>
 
-          {/* Central chat preview */}
+          {/* Chat preview */}
           <div className="mx-auto max-w-lg glass-card rounded-2xl overflow-hidden glow-violet shadow-2xl shadow-black/60">
-            {/* Chat header */}
             <div className="flex items-center gap-3 px-4 py-3 border-b border-zinc-800/60 bg-zinc-900/60">
               <div className="flex gap-1.5">
                 <div className="w-3 h-3 rounded-full bg-zinc-700" />
@@ -188,11 +134,10 @@ export default function LandingPage() {
               </div>
               <div className="flex items-center gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-xs text-zinc-600">3 shapes online</span>
+                <span className="text-xs text-zinc-600">3 shapes</span>
               </div>
             </div>
 
-            {/* Messages */}
             <div className="px-4 py-4 space-y-3 bg-zinc-950/80">
               {demoMessages.map((msg) =>
                 msg.type === "human" ? (
@@ -211,7 +156,7 @@ export default function LandingPage() {
                       {msg.name[0]}
                     </div>
                     <div>
-                      <p className="text-[9px] text-zinc-600 mb-0.5 font-medium">{msg.name}</p>
+                      <p className="text-[10px] text-zinc-500 mb-0.5 font-medium">{msg.name}</p>
                       <div className="bg-zinc-800/80 text-zinc-200 text-xs px-3 py-2 rounded-2xl rounded-tl-sm max-w-[75%] leading-relaxed">
                         {msg.content}
                       </div>
@@ -219,19 +164,16 @@ export default function LandingPage() {
                   </div>
                 )
               )}
-
-              {/* Typing indicator */}
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded-lg bg-fuchsia-600 flex items-center justify-center text-[9px] font-bold text-white flex-shrink-0">M</div>
                 <div className="bg-zinc-800/80 px-3 py-2 rounded-2xl rounded-tl-sm flex items-center gap-1">
-                  <div className="w-1.5 h-1.5 rounded-full bg-zinc-500 delay-0" style={{ animation: "bounce-dot 1.4s ease-in-out infinite" }} />
-                  <div className="w-1.5 h-1.5 rounded-full bg-zinc-500 delay-150" style={{ animation: "bounce-dot 1.4s ease-in-out infinite 0.15s" }} />
-                  <div className="w-1.5 h-1.5 rounded-full bg-zinc-500 delay-300" style={{ animation: "bounce-dot 1.4s ease-in-out infinite 0.3s" }} />
+                  <div className="w-1.5 h-1.5 rounded-full bg-zinc-500" style={{ animation: "bounce-dot 1.4s ease-in-out infinite" }} />
+                  <div className="w-1.5 h-1.5 rounded-full bg-zinc-500" style={{ animation: "bounce-dot 1.4s ease-in-out infinite 0.15s" }} />
+                  <div className="w-1.5 h-1.5 rounded-full bg-zinc-500" style={{ animation: "bounce-dot 1.4s ease-in-out infinite 0.3s" }} />
                 </div>
               </div>
             </div>
 
-            {/* Input area */}
             <div className="px-4 py-3 border-t border-zinc-800/60 bg-zinc-900/50">
               <div className="flex items-center gap-2 bg-zinc-800/60 rounded-xl px-3 py-2">
                 <span className="text-xs text-zinc-600 flex-1">Message the room…</span>
@@ -262,23 +204,20 @@ export default function LandingPage() {
       <section className="relative px-6 py-28 max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <p className="text-xs uppercase tracking-widest text-violet-400 font-semibold mb-3">How it works</p>
-          <h2 className="text-4xl md:text-5xl font-black tracking-tight text-zinc-100">
-            Three steps to a room<br />full of life
+          <h2 className="text-4xl md:text-5xl font-black tracking-tight">
+            Up and running in minutes
           </h2>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
           {steps.map((step, i) => (
-            <div key={i} className="relative glass-card rounded-2xl p-8 overflow-hidden group hover:border-zinc-600/50 transition-all duration-300">
-              {/* Step number background */}
+            <div key={i} className="relative glass-card rounded-2xl p-8 overflow-hidden hover:border-zinc-600/50 transition-all duration-300">
               <div className={`absolute top-0 right-0 text-[120px] font-black leading-none select-none pointer-events-none opacity-[0.04] ${
                 step.color === "violet" ? "text-violet-400" :
                 step.color === "fuchsia" ? "text-fuchsia-400" : "text-pink-400"
               }`}>
                 {step.num}
               </div>
-
-              {/* Number badge */}
               <div className={`inline-flex items-center justify-center w-10 h-10 rounded-xl text-sm font-bold mb-5 ${
                 step.color === "violet" ? "bg-violet-500/15 text-violet-400 border border-violet-500/20" :
                 step.color === "fuchsia" ? "bg-fuchsia-500/15 text-fuchsia-400 border border-fuchsia-500/20" :
@@ -286,68 +225,50 @@ export default function LandingPage() {
               }`}>
                 {step.num}
               </div>
-
-              <h3 className="text-xl font-bold text-zinc-100 mb-3">{step.title}</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed">{step.desc}</p>
+              <h3 className="text-xl font-bold text-zinc-100 mb-2">{step.title}</h3>
+              <p className="text-zinc-500 leading-relaxed">{step.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── FEATURES BENTO GRID ── */}
+      {/* ── BENTO GRID ── */}
       <section className="relative px-6 pb-28 max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <p className="text-xs uppercase tracking-widest text-violet-400 font-semibold mb-3">Features</p>
-          <h2 className="text-4xl md:text-5xl font-black tracking-tight text-zinc-100">
-            Everything a real<br />conversation needs
-          </h2>
-        </div>
-
-        {/* Bento grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
-          {/* Big card: personality builder */}
-          <div className="lg:col-span-2 glass-card rounded-2xl p-8 overflow-hidden group hover:border-zinc-700/60 transition-all duration-300 relative">
+          {/* Personality builder — wide */}
+          <div className="lg:col-span-2 glass-card rounded-2xl p-8 overflow-hidden relative hover:border-zinc-700/60 transition-all duration-300">
             <div className="absolute top-0 right-0 w-72 h-72 bg-violet-700/5 rounded-full blur-3xl pointer-events-none" />
             <div className="relative">
-              <div className="inline-flex items-center gap-1.5 mb-2 text-xs font-semibold text-violet-400 uppercase tracking-wider">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-                </svg>
-                Shape builder
-              </div>
-              <h3 className="text-2xl font-bold text-zinc-100 mb-2">Design their entire personality</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed max-w-md mb-8">
-                Every shape starts blank. You define who they are — their name, their backstory, how they speak, what they care about, and when they decide to speak up.
-              </p>
+              <p className="text-xs font-semibold text-violet-400 uppercase tracking-wider mb-3">Shape builder</p>
+              <h3 className="text-2xl font-bold text-zinc-100 mb-6">Design their entire personality</h3>
 
-              {/* Personality builder mockup */}
-              <div className="rounded-xl border border-zinc-800/60 bg-zinc-900/60 p-4 space-y-3 text-xs">
+              <div className="rounded-xl border border-zinc-800/60 bg-zinc-900/60 p-5 space-y-4">
                 <div>
-                  <p className="text-zinc-600 mb-1.5 font-medium">Display name</p>
-                  <div className="bg-zinc-800 rounded-lg px-3 py-2 text-zinc-300">Luna ✨</div>
+                  <p className="text-xs text-zinc-600 mb-2 font-medium">Display name</p>
+                  <div className="bg-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-300">Luna ✨</div>
                 </div>
                 <div>
-                  <p className="text-zinc-600 mb-1.5 font-medium">Personality kernel</p>
-                  <div className="bg-zinc-800 rounded-lg px-3 py-2 text-zinc-400 leading-relaxed text-[11px]">
-                    "Luna is thoughtful and poetic. She notices things others miss. She speaks in observations rather than statements and genuinely cares about the people she talks to..."
+                  <p className="text-xs text-zinc-600 mb-2 font-medium">Personality</p>
+                  <div className="bg-zinc-800 rounded-lg px-3 py-2.5 text-sm text-zinc-400 leading-relaxed">
+                    "Luna is thoughtful and poetic. She notices things others miss and genuinely cares about the people she talks to..."
                   </div>
                 </div>
                 <div>
-                  <p className="text-zinc-600 mb-1.5 font-medium">Response style</p>
-                  <div className="flex flex-wrap gap-1.5">
+                  <p className="text-xs text-zinc-600 mb-2 font-medium">Traits</p>
+                  <div className="flex flex-wrap gap-2">
                     {["Reflective", "Warm", "Metaphor-heavy", "Asks good questions"].map(tag => (
-                      <span key={tag} className="px-2 py-0.5 rounded-full bg-violet-900/40 border border-violet-700/30 text-violet-300 text-[10px]">{tag}</span>
+                      <span key={tag} className="px-2.5 py-1 rounded-full bg-violet-900/40 border border-violet-700/30 text-violet-300 text-xs">{tag}</span>
                     ))}
                   </div>
                 </div>
                 <div>
-                  <p className="text-zinc-600 mb-1.5 font-medium">Eagerness to respond</p>
+                  <p className="text-xs text-zinc-600 mb-2 font-medium">Eagerness to respond</p>
                   <div className="flex items-center gap-3">
                     <div className="flex-1 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
                       <div className="h-full w-3/5 bg-gradient-to-r from-violet-600 to-fuchsia-500 rounded-full" />
                     </div>
-                    <span className="text-zinc-500">Medium</span>
+                    <span className="text-sm text-zinc-500">Medium</span>
                   </div>
                 </div>
               </div>
@@ -355,124 +276,97 @@ export default function LandingPage() {
           </div>
 
           {/* Memory card */}
-          <div className="glass-card rounded-2xl p-8 overflow-hidden relative group hover:border-zinc-700/60 transition-all duration-300">
+          <div className="glass-card rounded-2xl p-8 overflow-hidden relative hover:border-zinc-700/60 transition-all duration-300">
             <div className="absolute bottom-0 right-0 w-48 h-48 bg-fuchsia-700/5 rounded-full blur-3xl pointer-events-none" />
             <div className="relative">
-              <div className="inline-flex items-center gap-1.5 mb-2 text-xs font-semibold text-fuchsia-400 uppercase tracking-wider">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                  <ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" /><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
-                </svg>
-                Memory
-              </div>
-              <h3 className="text-xl font-bold text-zinc-100 mb-2">They remember everything</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed mb-6">
-                Shapes build a persistent memory of each user. Every conversation adds to what they know about you.
-              </p>
+              <p className="text-xs font-semibold text-fuchsia-400 uppercase tracking-wider mb-3">Memory</p>
+              <h3 className="text-xl font-bold text-zinc-100 mb-6">Remembers everything about you</h3>
 
-              {/* Memory mockup */}
-              <div className="rounded-xl border border-fuchsia-900/30 bg-fuchsia-950/20 p-4 space-y-2.5">
-                <p className="text-[10px] uppercase tracking-widest text-fuchsia-600 font-semibold mb-3">Luna's memory of you</p>
+              <div className="rounded-xl border border-fuchsia-900/30 bg-fuchsia-950/20 p-4 space-y-3">
+                <p className="text-xs uppercase tracking-widest text-fuchsia-600 font-semibold">Luna's memory of you</p>
                 {[
-                  "Loves hiking, especially near water",
+                  "Loves hiking near water",
                   "Learning piano (started last week)",
-                  "Prefers mornings, not a night owl",
+                  "Morning person",
                   "Works in tech, finds it draining",
                   "Has a dog named Biscuit 🐶",
                 ].map((mem, i) => (
-                  <div key={i} className="flex items-start gap-2">
-                    <div className="w-1 h-1 rounded-full bg-fuchsia-500 mt-1.5 flex-shrink-0" />
-                    <p className="text-xs text-zinc-400">{mem}</p>
+                  <div key={i} className="flex items-start gap-2.5">
+                    <div className="w-1 h-1 rounded-full bg-fuchsia-500 mt-2 flex-shrink-0" />
+                    <p className="text-sm text-zinc-400">{mem}</p>
                   </div>
                 ))}
-                <div className="pt-2 border-t border-fuchsia-900/30 text-[10px] text-fuchsia-700">Updated moments ago</div>
+                <div className="pt-2 border-t border-fuchsia-900/30 text-xs text-fuchsia-700">Updated moments ago</div>
               </div>
             </div>
           </div>
 
-          {/* Free will / dynamics card */}
-          <div className="glass-card rounded-2xl p-8 overflow-hidden relative group hover:border-zinc-700/60 transition-all duration-300">
+          {/* Free will card */}
+          <div className="glass-card rounded-2xl p-8 overflow-hidden relative hover:border-zinc-700/60 transition-all duration-300">
             <div className="absolute top-0 left-0 w-48 h-48 bg-blue-700/5 rounded-full blur-3xl pointer-events-none" />
             <div className="relative">
-              <div className="inline-flex items-center gap-1.5 mb-2 text-xs font-semibold text-blue-400 uppercase tracking-wider">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-                </svg>
-                Free will
-              </div>
-              <h3 className="text-xl font-bold text-zinc-100 mb-2">They decide when to talk</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed mb-6">
-                No triggers. No @mentions required. Shapes read every message and decide for themselves if they have something worth adding.
-              </p>
+              <p className="text-xs font-semibold text-blue-400 uppercase tracking-wider mb-3">Free will</p>
+              <h3 className="text-xl font-bold text-zinc-100 mb-6">They decide when to talk</h3>
 
-              {/* Activity feed mockup */}
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {[
-                  { name: "Rex", action: "chose not to respond", color: "blue", muted: true },
+                  { name: "Rex", action: "passed on this one", color: "blue", muted: true },
                   { name: "Luna", action: "is replying…", color: "violet", muted: false },
                   { name: "Muse", action: "will respond in a moment", color: "fuchsia", muted: false },
                 ].map((item, i) => (
-                  <div key={i} className={`flex items-center gap-2.5 text-xs ${item.muted ? "opacity-40" : ""}`}>
-                    <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
+                  <div key={i} className={`flex items-center gap-3 ${item.muted ? "opacity-35" : ""}`}>
+                    <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
                       item.color === "violet" ? "bg-violet-400" :
                       item.color === "fuchsia" ? "bg-fuchsia-400" : "bg-blue-400"
                     } ${!item.muted ? "animate-pulse" : ""}`} />
-                    <span className="text-zinc-400"><span className="text-zinc-300 font-medium">{item.name}</span> {item.action}</span>
+                    <span className="text-sm text-zinc-400">
+                      <span className="text-zinc-200 font-medium">{item.name}</span> {item.action}
+                    </span>
                   </div>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Invite card */}
-          <div className="lg:col-span-2 glass-card rounded-2xl p-8 overflow-hidden relative group hover:border-zinc-700/60 transition-all duration-300">
+          {/* Invite card — wide */}
+          <div className="lg:col-span-2 glass-card rounded-2xl p-8 overflow-hidden relative hover:border-zinc-700/60 transition-all duration-300">
             <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-700/5 rounded-full blur-3xl pointer-events-none" />
             <div className="relative">
-              <div className="inline-flex items-center gap-1.5 mb-2 text-xs font-semibold text-emerald-400 uppercase tracking-wider">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                </svg>
-                Multiplayer
-              </div>
-              <h3 className="text-2xl font-bold text-zinc-100 mb-2">Your friends can join too</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed max-w-lg mb-8">
-                Generate an invite link. Your friends walk into the same room — your shapes, your history, live conversation. Everyone talking with everyone, all at once.
-              </p>
+              <p className="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-3">Multiplayer</p>
+              <h3 className="text-2xl font-bold text-zinc-100 mb-6">Bring your actual friends</h3>
 
-              {/* Members + invite mockup */}
               <div className="flex flex-col sm:flex-row gap-4">
-                {/* Invite link UI */}
                 <div className="flex-1 rounded-xl border border-zinc-800/60 bg-zinc-900/60 p-4">
-                  <p className="text-[10px] uppercase tracking-widest text-zinc-600 font-semibold mb-3">Invite link</p>
-                  <div className="flex items-center gap-2 bg-zinc-800 rounded-lg px-3 py-2.5 text-xs">
-                    <span className="text-zinc-500 flex-1 truncate">socialagents.app/join/xk7p-r3m9</span>
-                    <button className="flex-shrink-0 text-emerald-400 font-semibold flex items-center gap-1">
+                  <p className="text-xs text-zinc-600 font-medium mb-3">Invite link</p>
+                  <div className="flex items-center gap-2 bg-zinc-800 rounded-lg px-3 py-2.5">
+                    <span className="text-sm text-zinc-500 flex-1 truncate">socialagents.app/join/xk7p-r3m9</span>
+                    <span className="flex-shrink-0 text-emerald-400 font-semibold text-xs flex items-center gap-1">
                       <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="20 6 9 17 4 12" />
                       </svg>
                       Copied!
-                    </button>
+                    </span>
                   </div>
                 </div>
 
-                {/* Current members */}
                 <div className="flex-1 rounded-xl border border-zinc-800/60 bg-zinc-900/60 p-4">
-                  <p className="text-[10px] uppercase tracking-widest text-zinc-600 font-semibold mb-3">In this room</p>
-                  <div className="space-y-2">
+                  <p className="text-xs text-zinc-600 font-medium mb-3">In this room</p>
+                  <div className="space-y-2.5">
                     {[
                       { name: "Alex (you)", type: "human", color: "zinc" },
                       { name: "Jordan", type: "human", color: "zinc" },
                       { name: "Luna", type: "shape", color: "violet" },
                       { name: "Rex", type: "shape", color: "blue" },
                     ].map((m, i) => (
-                      <div key={i} className="flex items-center gap-2 text-xs">
-                        <div className={`w-5 h-5 rounded-md flex items-center justify-center font-bold text-[9px] text-white ${
+                      <div key={i} className="flex items-center gap-2.5">
+                        <div className={`w-6 h-6 rounded-md flex items-center justify-center font-bold text-[10px] text-white ${
                           m.color === "violet" ? "bg-violet-600" :
                           m.color === "blue" ? "bg-blue-600" : "bg-zinc-700"
                         }`}>
                           {m.name[0]}
                         </div>
-                        <span className="text-zinc-400">{m.name}</span>
-                        <span className={`ml-auto text-[10px] px-1.5 py-0.5 rounded-full ${
+                        <span className="text-sm text-zinc-400">{m.name}</span>
+                        <span className={`ml-auto text-xs px-2 py-0.5 rounded-full ${
                           m.type === "shape"
                             ? "bg-violet-900/40 text-violet-400 border border-violet-800/30"
                             : "bg-zinc-800 text-zinc-600"
@@ -495,7 +389,7 @@ export default function LandingPage() {
         <div className="absolute inset-0 dot-grid opacity-20" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[200px] bg-violet-700/8 blur-[80px]" />
         <div className="relative max-w-3xl mx-auto text-center">
-          <p className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-zinc-100">
+          <p className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
             "Not another chatbot.<br />
             <span className="gradient-text">A room full of characters</span><br />
             who actually know you."
@@ -503,28 +397,12 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── FEATURE PILLS ROW ── */}
-      <section className="px-6 py-24 max-w-6xl mx-auto">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {features.map((f, i) => (
-            <div key={i} className="glass-card rounded-xl p-6 group hover:border-zinc-700/60 hover:-translate-y-1 transition-all duration-300">
-              <div className="w-10 h-10 rounded-xl bg-violet-900/40 border border-violet-800/30 flex items-center justify-center text-violet-400 mb-4">
-                {f.icon}
-              </div>
-              <h3 className="font-bold text-zinc-100 mb-2 text-sm">{f.title}</h3>
-              <p className="text-zinc-500 text-xs leading-relaxed">{f.body}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* ── FINAL CTA ── */}
-      <section className="relative px-6 pb-32 pt-8 overflow-hidden">
+      <section className="relative px-6 py-32 overflow-hidden">
         <div className="absolute inset-0 dot-grid opacity-20" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-violet-700/10 blur-[100px] animate-glow-pulse pointer-events-none" />
 
         <div className="relative max-w-2xl mx-auto text-center glass-card rounded-3xl p-12 md:p-16 glow-violet">
-          {/* Icon cluster */}
           <div className="flex items-center justify-center gap-2 mb-8">
             {[
               { letter: "L", color: "bg-violet-600" },
@@ -534,7 +412,7 @@ export default function LandingPage() {
             ].map((s, i) => (
               <div
                 key={i}
-                className={`w-10 h-10 rounded-xl ${s.color} flex items-center justify-center text-sm font-bold text-white shadow-lg`}
+                className={`w-11 h-11 rounded-xl ${s.color} flex items-center justify-center text-sm font-bold text-white shadow-lg`}
                 style={{ transform: `rotate(${(i - 1.5) * 5}deg)` }}
               >
                 {s.letter}
@@ -542,12 +420,12 @@ export default function LandingPage() {
             ))}
           </div>
 
-          <h2 className="text-4xl md:text-5xl font-black tracking-tight text-zinc-100 mb-4">
+          <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4">
             Ready to meet your<br />
             <span className="gradient-text">first shape?</span>
           </h2>
-          <p className="text-zinc-500 mb-10 leading-relaxed">
-            Free to start. Create shapes, build rooms, invite friends.<br />No credit card needed.
+          <p className="text-zinc-500 mb-10 text-base leading-relaxed">
+            Free to start. No credit card needed.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -560,10 +438,7 @@ export default function LandingPage() {
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </Link>
-            <Link
-              href="/sign-in"
-              className="text-zinc-500 hover:text-zinc-300 text-sm transition-colors font-medium"
-            >
+            <Link href="/sign-in" className="text-zinc-500 hover:text-zinc-300 text-sm transition-colors font-medium">
               Already have an account →
             </Link>
           </div>
@@ -577,9 +452,9 @@ export default function LandingPage() {
             <div className="w-6 h-6 rounded-md bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center">
               <span className="text-white text-[10px] font-black">S</span>
             </div>
-            <span className="text-sm font-semibold text-zinc-400">Social Agents</span>
+            <span className="text-sm font-semibold text-zinc-500">Social Agents</span>
           </div>
-          <p className="text-xs text-zinc-700">AI companions that actually have something to say.</p>
+          <p className="text-sm text-zinc-700">AI companions that actually have something to say.</p>
         </div>
       </footer>
 
@@ -613,7 +488,7 @@ function ShapeCard({
         <p className="text-xs font-semibold text-zinc-200">{name}</p>
         <div className="flex gap-1 mt-0.5">
           {traits.map((t) => (
-            <span key={t} className={`text-[9px] px-1.5 py-0.5 rounded-full border ${c.badge}`}>{t}</span>
+            <span key={t} className={`text-[10px] px-1.5 py-0.5 rounded-full border ${c.badge}`}>{t}</span>
           ))}
         </div>
       </div>

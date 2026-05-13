@@ -17,5 +17,8 @@
       "WebFetch(domain:www.llama.com)",
       "WebFetch(domain:neonstatus.com)"
     ]
+  },
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true
   }
 }
