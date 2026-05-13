@@ -19,14 +19,16 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="flex flex-col h-screen bg-zinc-950">
-      <header className="flex items-center justify-between px-5 py-3 border-b border-zinc-800/60 flex-shrink-0">
-        <Link href="/rooms" className="flex items-center gap-2">
-          <span className="text-violet-400 font-black text-xl tracking-tighter">✦</span>
-          <span className="font-bold text-lg text-zinc-100 tracking-tight">Social Agents</span>
+      <header className="flex items-center justify-between px-5 py-3 border-b border-zinc-800/60 flex-shrink-0 bg-zinc-950/80 backdrop-blur-md">
+        <Link href="/rooms" className="flex items-center gap-2 group">
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center transition-opacity group-hover:opacity-80">
+            <span className="text-white text-xs font-black">S</span>
+          </div>
+          <span className="font-bold text-base text-zinc-100 tracking-tight">Social Agents</span>
         </Link>
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2 bg-zinc-900 rounded-full pl-1.5 pr-4 py-1.5">
-            <div className="w-7 h-7 rounded-full bg-violet-700 flex items-center justify-center text-xs font-bold text-violet-100">
+          <div className="flex items-center gap-2.5 bg-zinc-900 border border-zinc-800 rounded-full pl-1.5 pr-4 py-1.5">
+            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center text-[10px] font-bold text-white">
               {initials}
             </div>
             <span className="text-sm text-zinc-300 hidden sm:block">{displayName}</span>

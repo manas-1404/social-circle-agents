@@ -45,7 +45,9 @@ export function MessageInput({ onSend, disabled }: MessageInputProps) {
 
   return (
     <div className="px-4 py-3 bg-zinc-950 border-t border-zinc-800/60">
-      <div className={`flex items-end gap-2 bg-zinc-900 border rounded-xl px-3 py-2 focus-within:border-zinc-600 transition-colors ${error ? "border-red-500/60" : "border-zinc-800"}`}>
+      <div className={`flex items-end gap-2 bg-zinc-900/80 border rounded-xl px-3 py-2 transition-colors ${
+        error ? "border-red-500/50" : "border-zinc-800 focus-within:border-violet-700/60"
+      }`}>
         <textarea
           ref={textareaRef}
           value={value}
@@ -54,7 +56,7 @@ export function MessageInput({ onSend, disabled }: MessageInputProps) {
           placeholder="Message…"
           disabled={disabled || sending}
           rows={1}
-          className="flex-1 resize-none bg-transparent text-base text-zinc-100 placeholder:text-zinc-500 focus:outline-none disabled:opacity-50 py-0.5"
+          className="flex-1 resize-none bg-transparent text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none disabled:opacity-50 py-1"
           style={{ maxHeight: "120px", overflowY: "auto" }}
         />
         <button
@@ -62,7 +64,7 @@ export function MessageInput({ onSend, disabled }: MessageInputProps) {
           disabled={!canSend}
           className={`flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center transition-all ${
             canSend
-              ? "bg-violet-600 hover:bg-violet-500 text-white"
+              ? "bg-violet-600 hover:bg-violet-500 text-white shadow-sm shadow-violet-900/40"
               : "bg-zinc-800 text-zinc-600 cursor-not-allowed"
           }`}
         >
@@ -80,7 +82,7 @@ export function MessageInput({ onSend, disabled }: MessageInputProps) {
       {error ? (
         <p className="text-xs text-red-400 mt-1.5 ml-1">{error}</p>
       ) : (
-        <p className="text-xs text-zinc-600 mt-1.5 ml-1">Enter to send · Shift+Enter for newline</p>
+        <p className="text-xs text-zinc-700 mt-1.5 ml-1">Enter to send · Shift+Enter for newline</p>
       )}
     </div>
   );

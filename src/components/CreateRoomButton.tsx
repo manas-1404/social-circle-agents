@@ -30,7 +30,7 @@ export function CreateRoomButton() {
     <button
       onClick={handleClick}
       disabled={loading}
-      className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-sm font-medium transition-colors disabled:opacity-50 border border-zinc-700"
+      className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-sm font-semibold transition-all disabled:opacity-50 hover:shadow-md hover:shadow-violet-900/40 active:scale-[0.98]"
     >
       {loading ? (
         <svg className="animate-spin" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
@@ -45,4 +45,3 @@ export function CreateRoomButton() {
     </button>
   );
 }
-
