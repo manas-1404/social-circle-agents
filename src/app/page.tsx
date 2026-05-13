@@ -80,7 +80,7 @@ export default function LandingPage() {
           <span className="text-zinc-200">They have something to say.</span>
         </h1>
 
-        <p className="relative text-center text-zinc-400 max-w-lg mb-10 leading-relaxed animate-fade-up text-base md:text-lg" style={{ animationDelay: "0.2s" }}>
+        <p className="relative text-center text-zinc-300 max-w-lg mb-10 leading-relaxed animate-fade-up text-base md:text-lg" style={{ animationDelay: "0.2s" }}>
           Create AI agents with unique personalities and memory. Chat with them like people.
           Invite friends to join.
         </p>
@@ -134,7 +134,7 @@ export default function LandingPage() {
               </div>
               <div className="flex items-center gap-1">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-xs text-zinc-600">3 shapes</span>
+                <span className="text-xs text-zinc-400">3 shapes</span>
               </div>
             </div>
 
@@ -156,7 +156,7 @@ export default function LandingPage() {
                       {msg.name[0]}
                     </div>
                     <div>
-                      <p className="text-[10px] text-zinc-500 mb-0.5 font-medium">{msg.name}</p>
+                      <p className="text-[10px] text-zinc-400 mb-0.5 font-medium">{msg.name}</p>
                       <div className="bg-zinc-800/80 text-zinc-200 text-xs px-3 py-2 rounded-2xl rounded-tl-sm max-w-[75%] leading-relaxed">
                         {msg.content}
                       </div>
@@ -176,7 +176,7 @@ export default function LandingPage() {
 
             <div className="px-4 py-3 border-t border-zinc-800/60 bg-zinc-900/50">
               <div className="flex items-center gap-2 bg-zinc-800/60 rounded-xl px-3 py-2">
-                <span className="text-xs text-zinc-600 flex-1">Message the room…</span>
+                <span className="text-xs text-zinc-500 flex-1">Message the room…</span>
                 <div className="w-6 h-6 rounded-lg bg-violet-600/40 flex items-center justify-center">
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="text-violet-300" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12h14M12 5l7 7-7 7" />
@@ -192,7 +192,7 @@ export default function LandingPage() {
       <div className="relative border-y border-zinc-800/60 bg-zinc-900/30 py-4 overflow-hidden">
         <div className="flex animate-marquee whitespace-nowrap">
           {marqueeItems.map((item, i) => (
-            <span key={i} className="flex items-center gap-3 mx-6 text-sm text-zinc-500 font-medium flex-shrink-0">
+            <span key={i} className="flex items-center gap-3 mx-6 text-sm text-zinc-400 font-medium flex-shrink-0">
               <span className="w-1 h-1 rounded-full bg-violet-600 inline-block" />
               {item}
             </span>
@@ -226,7 +226,7 @@ export default function LandingPage() {
                 {step.num}
               </div>
               <h3 className="text-xl font-bold text-zinc-100 mb-2">{step.title}</h3>
-              <p className="text-zinc-500 leading-relaxed">{step.desc}</p>
+              <p className="text-zinc-300 leading-relaxed">{step.desc}</p>
             </div>
           ))}
         </div>
@@ -245,17 +245,17 @@ export default function LandingPage() {
 
               <div className="rounded-xl border border-zinc-800/60 bg-zinc-900/60 p-5 space-y-4">
                 <div>
-                  <p className="text-xs text-zinc-600 mb-2 font-medium">Display name</p>
+                  <p className="text-xs text-zinc-400 mb-2 font-medium">Display name</p>
                   <div className="bg-zinc-800 rounded-lg px-3 py-2 text-sm text-zinc-300">Luna ✨</div>
                 </div>
                 <div>
-                  <p className="text-xs text-zinc-600 mb-2 font-medium">Personality</p>
-                  <div className="bg-zinc-800 rounded-lg px-3 py-2.5 text-sm text-zinc-400 leading-relaxed">
+                  <p className="text-xs text-zinc-400 mb-2 font-medium">Personality</p>
+                  <div className="bg-zinc-800 rounded-lg px-3 py-2.5 text-sm text-zinc-300 leading-relaxed">
                     "Luna is thoughtful and poetic. She notices things others miss and genuinely cares about the people she talks to..."
                   </div>
                 </div>
                 <div>
-                  <p className="text-xs text-zinc-600 mb-2 font-medium">Traits</p>
+                  <p className="text-xs text-zinc-400 mb-2 font-medium">Traits</p>
                   <div className="flex flex-wrap gap-2">
                     {["Reflective", "Warm", "Metaphor-heavy", "Asks good questions"].map(tag => (
                       <span key={tag} className="px-2.5 py-1 rounded-full bg-violet-900/40 border border-violet-700/30 text-violet-300 text-xs">{tag}</span>
@@ -263,12 +263,12 @@ export default function LandingPage() {
                   </div>
                 </div>
                 <div>
-                  <p className="text-xs text-zinc-600 mb-2 font-medium">Eagerness to respond</p>
+                  <p className="text-xs text-zinc-400 mb-2 font-medium">Eagerness to respond</p>
                   <div className="flex items-center gap-3">
                     <div className="flex-1 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
                       <div className="h-full w-3/5 bg-gradient-to-r from-violet-600 to-fuchsia-500 rounded-full" />
                     </div>
-                    <span className="text-sm text-zinc-500">Medium</span>
+                    <span className="text-sm text-zinc-300">Medium</span>
                   </div>
                 </div>
               </div>
@@ -283,7 +283,7 @@ export default function LandingPage() {
               <h3 className="text-xl font-bold text-zinc-100 mb-6">Remembers everything about you</h3>
 
               <div className="rounded-xl border border-fuchsia-900/30 bg-fuchsia-950/20 p-4 space-y-3">
-                <p className="text-xs uppercase tracking-widest text-fuchsia-600 font-semibold">Luna's memory of you</p>
+                <p className="text-xs uppercase tracking-widest text-fuchsia-400 font-semibold">Luna's memory of you</p>
                 {[
                   "Loves hiking near water",
                   "Learning piano (started last week)",
@@ -292,11 +292,11 @@ export default function LandingPage() {
                   "Has a dog named Biscuit 🐶",
                 ].map((mem, i) => (
                   <div key={i} className="flex items-start gap-2.5">
-                    <div className="w-1 h-1 rounded-full bg-fuchsia-500 mt-2 flex-shrink-0" />
-                    <p className="text-sm text-zinc-400">{mem}</p>
+                    <div className="w-1 h-1 rounded-full bg-fuchsia-400 mt-2 flex-shrink-0" />
+                    <p className="text-sm text-zinc-300">{mem}</p>
                   </div>
                 ))}
-                <div className="pt-2 border-t border-fuchsia-900/30 text-xs text-fuchsia-700">Updated moments ago</div>
+                <div className="pt-2 border-t border-fuchsia-900/30 text-xs text-fuchsia-500">Updated moments ago</div>
               </div>
             </div>
           </div>
@@ -319,8 +319,8 @@ export default function LandingPage() {
                       item.color === "violet" ? "bg-violet-400" :
                       item.color === "fuchsia" ? "bg-fuchsia-400" : "bg-blue-400"
                     } ${!item.muted ? "animate-pulse" : ""}`} />
-                    <span className="text-sm text-zinc-400">
-                      <span className="text-zinc-200 font-medium">{item.name}</span> {item.action}
+                    <span className="text-sm text-zinc-300">
+                      <span className="text-zinc-100 font-medium">{item.name}</span> {item.action}
                     </span>
                   </div>
                 ))}
@@ -337,9 +337,9 @@ export default function LandingPage() {
 
               <div className="flex flex-col sm:flex-row gap-4">
                 <div className="flex-1 rounded-xl border border-zinc-800/60 bg-zinc-900/60 p-4">
-                  <p className="text-xs text-zinc-600 font-medium mb-3">Invite link</p>
+                  <p className="text-xs text-zinc-400 font-medium mb-3">Invite link</p>
                   <div className="flex items-center gap-2 bg-zinc-800 rounded-lg px-3 py-2.5">
-                    <span className="text-sm text-zinc-500 flex-1 truncate">socialagents.app/join/xk7p-r3m9</span>
+                    <span className="text-sm text-zinc-300 flex-1 truncate">socialagents.app/join/xk7p-r3m9</span>
                     <span className="flex-shrink-0 text-emerald-400 font-semibold text-xs flex items-center gap-1">
                       <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
                         <polyline points="20 6 9 17 4 12" />
@@ -350,7 +350,7 @@ export default function LandingPage() {
                 </div>
 
                 <div className="flex-1 rounded-xl border border-zinc-800/60 bg-zinc-900/60 p-4">
-                  <p className="text-xs text-zinc-600 font-medium mb-3">In this room</p>
+                  <p className="text-xs text-zinc-400 font-medium mb-3">In this room</p>
                   <div className="space-y-2.5">
                     {[
                       { name: "Alex (you)", type: "human", color: "zinc" },
@@ -365,11 +365,11 @@ export default function LandingPage() {
                         }`}>
                           {m.name[0]}
                         </div>
-                        <span className="text-sm text-zinc-400">{m.name}</span>
+                        <span className="text-sm text-zinc-200">{m.name}</span>
                         <span className={`ml-auto text-xs px-2 py-0.5 rounded-full ${
                           m.type === "shape"
                             ? "bg-violet-900/40 text-violet-400 border border-violet-800/30"
-                            : "bg-zinc-800 text-zinc-600"
+                            : "bg-zinc-800 text-zinc-400"
                         }`}>
                           {m.type}
                         </span>
@@ -424,7 +424,7 @@ export default function LandingPage() {
             Ready to meet your<br />
             <span className="gradient-text">first shape?</span>
           </h2>
-          <p className="text-zinc-500 mb-10 text-base leading-relaxed">
+          <p className="text-zinc-300 mb-10 text-base leading-relaxed">
             Free to start. No credit card needed.
           </p>
 
@@ -454,7 +454,7 @@ export default function LandingPage() {
             </div>
             <span className="text-sm font-semibold text-zinc-500">Social Agents</span>
           </div>
-          <p className="text-sm text-zinc-700">AI companions that actually have something to say.</p>
+          <p className="text-sm text-zinc-500">AI companions that actually have something to say.</p>
         </div>
       </footer>
 
