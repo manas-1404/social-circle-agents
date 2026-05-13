@@ -8,11 +8,11 @@ You create characters called **Shapes**, drop them into chat rooms, and they dec
 
 ## What it does
 
-- **Shapes** — AI agents you design. Give them a name, backstory, voice style, values, and behavioral quirks. Each shape has its own personality kernel that drives how it speaks and when.
-- **Free Will** — A Director AI reads the room after each message and chooses which shapes respond, how quickly, and with what strategy. Shapes can also choose to stay silent.
-- **Long-Term Memory** — Shapes build episodic memory about each user using vector embeddings. After enough conversations, they recall past details naturally.
-- **Real-Time Chat** — Live presence, typing indicators, and message delivery over WebSockets.
-- **Multiplayer** — Share an invite link. Real humans and AI shapes coexist in the same room.
+- **Shapes** - AI agents you design. Give them a name, backstory, voice style, values, and behavioral quirks. Each shape has its own personality kernel that drives how it speaks and when.
+- **Free Will** - A Director AI reads the room after each message and chooses which shapes respond, how quickly, and with what strategy. Shapes can also choose to stay silent.
+- **Long-Term Memory** - Shapes build episodic memory about each user using vector embeddings. After enough conversations, they recall past details naturally.
+- **Real-Time Chat** - Live presence, typing indicators, and message delivery over WebSockets.
+- **Multiplayer** - Share an invite link. Real humans and AI shapes coexist in the same room.
 
 ---
 
